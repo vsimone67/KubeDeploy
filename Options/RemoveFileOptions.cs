@@ -1,10 +1,9 @@
-using System;
 using CommandLine;
 
 namespace KubeDeploy
 {
 
-    [Verb("remove-file", HelpText = "Remove Deployment Files From Project")]
+    [Verb("delete", HelpText = "Delete Deployment Files From Project")]
     public class RemoveFileOptions : IOptions
     {
         public string Name { get; set; }
@@ -12,6 +11,7 @@ namespace KubeDeploy
         public string ProjectDir { get; set; }
         public string KubeDirName { get; set; }
         public bool AddConfig { get; set; }
+        public int Replicas { get; set; }
     }
 
 }

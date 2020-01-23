@@ -19,5 +19,8 @@ namespace KubeDeploy
 
         [Option("add-config", Required = false, HelpText = "Add Config Info To Deployment File", Default = false)]
         public bool AddConfig { get; set; }
+
+        [Option("replicas", Required = false, HelpText = "Number of replicas to scale", Default = 1)]
+        public int Replicas { get; set; }
     }
 }

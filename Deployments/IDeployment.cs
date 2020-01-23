@@ -10,7 +10,7 @@ namespace KubernetesExtension
 
         void CreateDeploymentFiles();
 
-        //void RemoveDeploymentFiles();
+        void RemoveDeploymentFiles();
 
         void BuildAndDeployToCluster();
         void DeployToCluster();
@@ -26,6 +26,7 @@ namespace KubernetesExtension
         public string NameSpace { get; set; }
         public string ProjectDir { get; set; }
         public string KubeDir { get; set; }
+        public int Replicas { get; set; }
 
     }
 }

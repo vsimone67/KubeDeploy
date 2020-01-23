@@ -12,7 +12,7 @@ namespace KubernetesExtension
         public string NameSpace { get; set; }
         public string ProjectDir { get; set; }
         public string KubeDir { get; set; }
-
+        public int Replicas { get; set; }
         public bool AddConfig { get; set; }
         const string DockerHubAccount = "vsimone67";
 
@@ -55,19 +55,8 @@ namespace KubernetesExtension
             }
         }
 
-        // public bool HasDeploymentConfiguration()
-        // {
-
-
-
-        //     var item = GetProjectItem(ProjectItems, KubeDir);
-        //     return (item != null && VSConstants.GUID_ItemType_PhysicalFolder == new Guid(item.Kind));
-        // }
-
         public bool HasDeploymnet()
         {
-
-
             bool retval = false;
             KuberntesConnection kubeConnection = new KuberntesConnection();
             var appName = MakeDeploymentName(Name);
@@ -127,17 +116,14 @@ namespace KubernetesExtension
             var appName = MakeDeploymentName(Name);
             var yamlDir = $"{ProjectDir}\\{KubeDir}";
             var knamespace = GetNameSpaceFromYaml(ProjectDir, KubeDir);
-            //var kubeCommand = $"set image deployment/{appName} {appName}={DockerHubAccount}/{appName}:latest --namespace {knamespace} --record";
-            //Utils.RunProcess("kubectl.exe", kubeCommand, yamlDir, true, Process_OutputDataReceived, Process_ErrorDataReceived);
             var kubeCommand = $"set image deployment/{appName} {appName}-pod={DockerHubAccount}/{appName} --namespace {knamespace} --record";
             Utils.RunProcess("kubectl.exe", kubeCommand, yamlDir, true, Process_OutputDataReceived, Process_ErrorDataReceived);
         }
 
-        // public void RemoveDeploymentFiles()
-        // {
-        //     var item = GetProjectItem(project.ProjectItems, KubeDir);
-        //     item.Delete();
-        // }
+        public void RemoveDeploymentFiles()
+        {
+            Directory.Delete($"{ProjectDir}\\{KubeDir}", true);
+        }
 
         protected override void Process_DockerBuildComplete(object sender, EventArgs e)
         {

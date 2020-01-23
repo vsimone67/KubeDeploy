@@ -2,8 +2,8 @@ using CommandLine;
 
 namespace KubeDeploy
 {
-    [Verb("full", HelpText = "Build and deploy to cluster")]
-    public class FullBuildOptions : IOptions
+    [Verb("scale", HelpText = "Scale a deployment with n replicas")]
+    public class ScaleOptions : IOptions
     {
         public string Name { get; set; }
         public string NameSpace { get; set; }

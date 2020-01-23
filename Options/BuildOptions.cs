@@ -10,5 +10,6 @@ namespace KubeDeploy
         public string ProjectDir { get; set; }
         public string KubeDirName { get; set; }
         public bool AddConfig { get; set; }
+        public int Replicas { get; set; }
     }
 }

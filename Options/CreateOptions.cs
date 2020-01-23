@@ -2,7 +2,7 @@ using CommandLine;
 
 namespace KubeDeploy
 {
-    [Verb("create", HelpText = "Create New Deployment Files.")]
+    [Verb("create", HelpText = "Create new deployment files.")]
     public class CreateOptions : IOptions
     {
         public string Name { get; set; }
@@ -10,5 +10,6 @@ namespace KubeDeploy
         public string ProjectDir { get; set; }
         public string KubeDirName { get; set; }
         public bool AddConfig { get; set; }
+        public int Replicas { get; set; }
     }
 }
