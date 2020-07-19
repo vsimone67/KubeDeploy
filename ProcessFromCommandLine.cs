@@ -36,6 +36,7 @@ namespace KubeDeploy
             _deployment.NameSpace = opts.NameSpace.TrimStart();
             _deployment.ProjectDir = opts.ProjectDir.TrimStart();
             _deployment.KubeDir = opts.KubeDirName;
+            _deployment.DeployType = opts.DeployType;
             _deployment.CreateDeploymentFiles();
             Console.WriteLine($"Deployment files have been created for {opts.Name.Trim()}");
 
@@ -67,7 +68,8 @@ namespace KubeDeploy
             _deployment.NameSpace = opts.NameSpace.TrimStart();
             _deployment.ProjectDir = opts.ProjectDir.TrimStart();
             _deployment.KubeDir = opts.KubeDirName;
-            Console.WriteLine("This needs to be added to the interface and kube");
+            _deployment.BuildAndDeployToCluster();
+
         }
         private void RemoveDeploymnetFromCluster(RemoveDeploymnetOptions opts)
         {

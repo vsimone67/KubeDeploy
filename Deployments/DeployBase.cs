@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 
 namespace KubernetesExtension
 {
@@ -73,11 +75,18 @@ namespace KubernetesExtension
             }
         }
 
-        protected void BuildDockerandPublishDockerImage(string appName, string projectDir, string deployDir)
+        protected void BuildPublishAndDeploy(string appName, string projectDir, string deployDir)
         {
             var psCommand = $"./deploy.ps1 -appName {appName} -projectDir {projectDir}";
             var psDir = $"{projectDir}\\{deployDir}";
             Utils.RunProcess("powershell.exe", psCommand, psDir, true, Process_OutputDataReceived, Process_ErrorDataReceived, Process_DockerBuildComplete);
+        }
+
+        protected void BuildAndPublishDockerImage(string appName, string projectDir, string deployDir)
+        {
+            var psCommand = $"./deploy.ps1 -appName {appName} -projectDir {projectDir}";
+            var psDir = $"{projectDir}\\{deployDir}";
+            Utils.RunProcess("powershell.exe", psCommand, psDir, true, Process_OutputDataReceived, Process_ErrorDataReceived);
         }
 
         protected string GetNameSpaceFromYaml(string projectDir, string kubeDir)
@@ -99,29 +108,15 @@ namespace KubernetesExtension
 
         protected string GetPowerShellDeployScript()
         {
-            return @"param(
-		[Parameter(Position=0, Mandatory=$true)]
-		[ValidateNotNullOrEmpty()]
-		[System.String]
-		$appName,
-
-		[Parameter(Position=1, Mandatory=$true)]
-		[ValidateNotNullOrEmpty()]
-		[System.String]
-		$projectDir
-	)
-
-Set-Location $projectDir
-docker build -t $appName -f ""$($projectDir)\dockerfile"".
-docker tag ""$($appName):latest"" vsimone67/""$($appName):latest""
-docker push vsimone67/""$($appName):latest""";
+            var rootDir = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            return File.ReadAllText($"{rootDir}/Templates/deploy-script.ps1");
         }
 
         protected string GetSettingsForScript()
         {
-            return @"kubectl create secret generic appsettings-secret-NAMEGOESHERE --namespace NAMESPACEGOESHERE --from-file=../appsettings.secrets.json
+            var rootDir = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
-kubectl create configmap appsettings-NAMEGOESHERE --namespace NAMESPACEGOESHERE --from-file=../appsettings.json";
+            return File.ReadAllText($"{rootDir}/Templates/configmap-template.ps1");
         }
     }
 }

@@ -4,8 +4,6 @@ namespace KubernetesExtension
 {
     public interface IDeployment
     {
-        //bool HasDeploymentConfiguration();
-
         bool HasDeploymnet();
 
         void CreateDeploymentFiles();
@@ -14,6 +12,7 @@ namespace KubernetesExtension
 
         void BuildAndDeployToCluster();
         void DeployToCluster();
+        void Build();
 
         void DeleteDeployment();
         void CheckDeploymentStatus();
@@ -27,6 +26,8 @@ namespace KubernetesExtension
         public string ProjectDir { get; set; }
         public string KubeDir { get; set; }
         public int Replicas { get; set; }
+
+        public string DeployType { get; set; }
 
     }
 }
