@@ -25,26 +25,6 @@ spec:
           ports:
             - name: http
               containerPort: 80
-          env:
-            - name: "appdirectory"
-              value: "/app/settings/"
-          volumeMounts:
-            - name: configs
-              mountPath: "/app/settings"
-          livenessProbe:
-           httpGet:
-             path: /health
-             port: 80
-           initialDelaySeconds: 5
-           periodSeconds: 5        
-      volumes:
-            - name: configs
-              projected:
-                sources:
-                  - configMap:
-                      name: appsettings-NAMEGOESHERE
-                  - secret:
-                      name: appsettings-secret-NAMEGOESHERE"
 ---
 apiVersion: v1
 kind: Service

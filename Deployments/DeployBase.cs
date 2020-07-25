@@ -118,5 +118,12 @@ namespace KubernetesExtension
 
             return File.ReadAllText($"{rootDir}/Templates/configmap-template.ps1");
         }
+
+        protected string GetSettingsForKubeDeployScript()
+        {
+            var rootDir = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+
+            return File.ReadAllText($"{rootDir}/Templates/kubedeploy-template.ps1");
+        }
     }
 }

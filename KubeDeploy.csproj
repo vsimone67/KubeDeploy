@@ -27,9 +27,13 @@
     <None Update="Templates\traefik-deployment.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Templates\traefik-basic-deployment.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
      <None Update="Templates\kubedeploy-template.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  
   </ItemGroup>   
 
   </Project>

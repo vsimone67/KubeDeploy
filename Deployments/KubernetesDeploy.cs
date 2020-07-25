@@ -30,16 +30,21 @@ namespace KubernetesExtension
 
             string deployYaml = GetKubeYamlText(DeployType);
             string configYaml = GetSettingsForScript();
+            string deployScript = GetSettingsForKubeDeployScript();
             deployYaml = deployYaml.Replace("NAMEGOESHERE", MakeDeploymentName(Name));
             deployYaml = deployYaml.Replace("NAMESPACEGOESHERE", NameSpace);
 
             configYaml = configYaml.Replace("NAMEGOESHERE", MakeDeploymentName(Name));
             configYaml = configYaml.Replace("NAMESPACEGOESHERE", NameSpace);
 
+            deployScript = deployScript.Replace("NAMEGOESHERE", MakeDeploymentName(Name));
+            deployScript = deployScript.Replace("NAMESPACEGOESHERE", NameSpace);
+
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\deployment.yaml", deployYaml);
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\createconfigs.ps1", configYaml);
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\deploy.ps1", GetPowerShellDeployScript());
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\createnamespace.ps1", GetNamespaceScript());
+            File.WriteAllText($"{ProjectDir}\\kube.ps1", deployScript);
 
         }
 
@@ -123,15 +128,9 @@ namespace KubernetesExtension
 
         public void Build()
         {
-            if (HasDeploymnet())
-            {
-                var appName = MakeDeploymentName(Name);
-                BuildAndPublishDockerImage(appName, ProjectDir, KubeDir);
-            }
-            else
-            {
-                Console.WriteLine("No deployment has been created");
-            }
+            var appName = MakeDeploymentName(Name);
+            BuildAndPublishDockerImage(appName, ProjectDir, KubeDir);
+
         }
         public void RemoveDeploymentFiles()
         {
@@ -160,9 +159,9 @@ namespace KubernetesExtension
             return File.ReadAllText($"{rootDir}/Templates/{fileName}");
 
         }
-
-
     }
 
     #endregion Yaml/PS file contents
+
+
 }
