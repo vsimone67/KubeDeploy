@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using KubeClient.Models;
 using Kubernetes;
 
@@ -13,13 +14,13 @@ namespace KubernetesExtension
         public string ProjectDir { get; set; }
         public string KubeDir { get; set; }
         public int Replicas { get; set; }
-        public bool AddConfig { get; set; }
+        public string DeployType { get; set; }
         const string DockerHubAccount = "vsimone67";
 
         public void BuildAndDeployToCluster()
         {
             var appName = MakeDeploymentName(Name);
-            BuildDockerandPublishDockerImage(appName, ProjectDir, KubeDir);
+            BuildPublishAndDeploy(appName, ProjectDir, KubeDir);
         }
 
         public void CreateDeploymentFiles()
@@ -27,18 +28,23 @@ namespace KubernetesExtension
 
             Directory.CreateDirectory($"{ProjectDir}\\{KubeDir}");
 
-            string deployYaml = GetKubeYamlText(AddConfig);
+            string deployYaml = GetKubeYamlText(DeployType);
             string configYaml = GetSettingsForScript();
+            string deployScript = GetSettingsForKubeDeployScript();
             deployYaml = deployYaml.Replace("NAMEGOESHERE", MakeDeploymentName(Name));
             deployYaml = deployYaml.Replace("NAMESPACEGOESHERE", NameSpace);
 
             configYaml = configYaml.Replace("NAMEGOESHERE", MakeDeploymentName(Name));
             configYaml = configYaml.Replace("NAMESPACEGOESHERE", NameSpace);
 
+            deployScript = deployScript.Replace("NAMEGOESHERE", MakeDeploymentName(Name));
+            deployScript = deployScript.Replace("NAMESPACEGOESHERE", NameSpace);
+
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\deployment.yaml", deployYaml);
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\createconfigs.ps1", configYaml);
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\deploy.ps1", GetPowerShellDeployScript());
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\createnamespace.ps1", GetNamespaceScript());
+            File.WriteAllText($"{ProjectDir}\\kube.ps1", deployScript);
 
         }
 
@@ -120,6 +126,12 @@ namespace KubernetesExtension
             Utils.RunProcess("kubectl.exe", kubeCommand, yamlDir, true, Process_OutputDataReceived, Process_ErrorDataReceived);
         }
 
+        public void Build()
+        {
+            var appName = MakeDeploymentName(Name);
+            BuildAndPublishDockerImage(appName, ProjectDir, KubeDir);
+
+        }
         public void RemoveDeploymentFiles()
         {
             Directory.Delete($"{ProjectDir}\\{KubeDir}", true);
@@ -138,72 +150,18 @@ namespace KubernetesExtension
             return $"kubectl create namespace { NameSpace}";
         }
 
-        private string GetKubeYamlText(bool addConfig)
+        private string GetKubeYamlText(string deployType)
         {
-            string header = @"apiVersion: v1
-kind: Namespace
-metadata:
-  name: NAMESPACEGOESHERE
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: NAMEGOESHERE
-  namespace: NAMESPACEGOESHERE
-spec:
-  selector:
-    matchLabels:
-      app: NAMEGOESHERE
-  replicas: 1
-  minReadySeconds: 10
-  template:
-    metadata:
-      labels:
-        app: NAMEGOESHERE
-    spec:
-      containers:
-        - name: NAMEGOESHERE-pod
-          image: vsimone67/NAMEGOESHERE:latest
-          imagePullPolicy: ""Always""
-          ports:
-            - name: http
-              containerPort: 80
-";
-            string configMaps = @"          env:
-            - name: ""appdirectory""
-              value: ""/app/settings/""
-          volumeMounts:
-            - name: configs
-              mountPath: ""/app/settings""
-      volumes:
-            - name: configs
-              projected:
-                sources:
-                  - configMap:
-                      name: appsettings-NAMEGOESHERE
-                  - secret:
-                      name: appsettings-secret-NAMEGOESHERE";
 
-            string service = @"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: NAMEGOESHERE-svc
-  namespace: NAMESPACEGOESHERE
-spec:
-  ports:
-    - name: http
-      port: 80
-      protocol: TCP
-      targetPort: 80
-  selector:
-    app: NAMEGOESHERE
-  type: LoadBalancer";
+            string fileName = $"{deployType}-deployment.yaml";
 
-            return header + ((addConfig) ? configMaps : "") + service;
+            var rootDir = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            return File.ReadAllText($"{rootDir}/Templates/{fileName}");
+
         }
     }
 
     #endregion Yaml/PS file contents
+
+
 }

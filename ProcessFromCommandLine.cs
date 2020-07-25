@@ -36,8 +36,9 @@ namespace KubeDeploy
             _deployment.NameSpace = opts.NameSpace.TrimStart();
             _deployment.ProjectDir = opts.ProjectDir.TrimStart();
             _deployment.KubeDir = opts.KubeDirName;
+            _deployment.DeployType = opts.DeployType;
             _deployment.CreateDeploymentFiles();
-            Console.WriteLine($"Deployment files have been created for {opts.Name.Trim()}");
+            ConsoleMessage($"Deployment files have been created for {opts.Name.Trim()}");
 
         }
 
@@ -48,7 +49,7 @@ namespace KubeDeploy
             _deployment.ProjectDir = opts.ProjectDir.TrimStart();
             _deployment.KubeDir = opts.KubeDirName;
             _deployment.BuildAndDeployToCluster();
-            Console.WriteLine($"Full deployment has completed for {opts.Name.Trim()}");
+            ConsoleMessage($"Full deployment has completed for {opts.Name.Trim()}");
         }
 
         private void DeployToCluster(DeployOptions opts)
@@ -58,7 +59,7 @@ namespace KubeDeploy
             _deployment.ProjectDir = opts.ProjectDir.TrimStart();
             _deployment.KubeDir = opts.KubeDirName;
             _deployment.DeployToCluster();
-            Console.WriteLine($"Deployment has been completed for {opts.Name.Trim()}");
+            ConsoleMessage($"Deployment has been completed for {opts.Name.Trim()}");
         }
 
         private void BuildProject(BuildOptions opts)
@@ -67,7 +68,9 @@ namespace KubeDeploy
             _deployment.NameSpace = opts.NameSpace.TrimStart();
             _deployment.ProjectDir = opts.ProjectDir.TrimStart();
             _deployment.KubeDir = opts.KubeDirName;
-            Console.WriteLine("This needs to be added to the interface and kube");
+            _deployment.Build();
+            ConsoleMessage($"Deployment {opts.Name.Trim()} has been built and moved to docker hub");
+
         }
         private void RemoveDeploymnetFromCluster(RemoveDeploymnetOptions opts)
         {
@@ -76,7 +79,7 @@ namespace KubeDeploy
             _deployment.ProjectDir = opts.ProjectDir.TrimStart();
             _deployment.KubeDir = opts.KubeDirName;
             _deployment.DeleteDeployment();
-            Console.WriteLine($"Deployment has been removed for {opts.Name.Trim()}");
+            ConsoleMessage($"Deployment has been removed for {opts.Name.Trim()}");
         }
 
 
@@ -87,6 +90,8 @@ namespace KubeDeploy
             _deployment.ProjectDir = opts.ProjectDir.TrimStart();
             _deployment.KubeDir = opts.KubeDirName;
             _deployment.RemoveDeploymentFiles();
+            ConsoleMessage($"Deployment files have been removed for {opts.Name.Trim()}");
+
         }
 
         private void ScaleDeployment(ScaleOptions opts)
@@ -98,7 +103,7 @@ namespace KubeDeploy
 
             _deployment.ScaleDeployment(opts.Replicas);
 
-            Console.WriteLine($"Deployment {opts.Name.Trim()} has been scaled to {opts.Replicas} replicas");
+            ConsoleMessage($"Deployment {opts.Name.Trim()} has been scaled to {opts.Replicas} replicas");
         }
 
         private void CheckDeploymentStatus(StatusOptions opts)
@@ -112,6 +117,15 @@ namespace KubeDeploy
         {
             //handle errors
 
+        }
+
+        private void ConsoleMessage(string message)
+        {
+            var currentColor = Console.ForegroundColor;
+
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine(message);
+            Console.ForegroundColor = currentColor;
         }
     }
 }
