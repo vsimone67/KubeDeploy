@@ -3,8 +3,8 @@ using CommandLine;
 
 namespace KubeDeploy
 {
-    [Verb("create", HelpText = "Create new deployment files.")]
-    public class CreateOptions : ICreateOptions
+    [Verb("boobat", HelpText = "Create new deployment files.")]
+    public class BooBatOptions : ICreateOptions
     {
         public string FileName { get; set; }
         public IEnumerable<string> Projects { get; set; }

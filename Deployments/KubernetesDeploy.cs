@@ -15,7 +15,8 @@ namespace KubernetesExtension
         public string KubeDir { get; set; }
         public int Replicas { get; set; }
         public string DeployType { get; set; }
-        const string DockerHubAccount = "vsimone67";
+        public string DockerHubAccount { get; set; }
+        public int Port { get; set; }
 
         public void BuildAndDeployToCluster()
         {

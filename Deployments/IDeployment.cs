@@ -21,13 +21,17 @@ namespace KubernetesExtension
 
         DeploymentV1 GetDeploymentInfo();
 
-        public string Name { get; set; }
-        public string NameSpace { get; set; }
-        public string ProjectDir { get; set; }
-        public string KubeDir { get; set; }
-        public int Replicas { get; set; }
+        string Name { get; set; }
+        string NameSpace { get; set; }
+        string ProjectDir { get; set; }
+        string KubeDir { get; set; }
+        int Replicas { get; set; }
+        string DeployType { get; set; }
+        string DockerHubAccount { get; set; }
 
-        public string DeployType { get; set; }
+        int Port { get; set; }
+
+
 
     }
 }

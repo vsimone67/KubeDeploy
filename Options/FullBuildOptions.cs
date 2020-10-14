@@ -1,15 +1,14 @@
+using System.Collections.Generic;
 using CommandLine;
 
 namespace KubeDeploy
 {
     [Verb("full", HelpText = "Build and deploy to cluster")]
-    public class FullBuildOptions : IOptions
+    public class FullBuildOptions : IBaseOptions
     {
-        public string Name { get; set; }
-        public string NameSpace { get; set; }
-        public string ProjectDir { get; set; }
+        public string FileName { get; set; }
+        public IEnumerable<string> Projects { get; set; }
         public string KubeDirName { get; set; }
-        public string DeployType { get; set; }
-        public int Replicas { get; set; }
+
     }
 }

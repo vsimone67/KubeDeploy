@@ -53,8 +53,8 @@ namespace KubernetesExtension
 
         protected string MakeDeploymentName(string name)
         {
-            string newName = AddDeploymnetType(name);
-            return GetDeploymentName(newName);
+            //string newName = AddDeploymnetType(name);
+            return GetDeploymentName(name);
         }
 
         protected async void Process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
