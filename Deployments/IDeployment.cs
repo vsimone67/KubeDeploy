@@ -10,14 +10,16 @@ namespace KubernetesExtension
 
         void RemoveDeploymentFiles();
 
-        void BuildAndDeployToCluster();
         void DeployToCluster();
+        void PushToCluster();
         void Build();
 
         void DeleteDeployment();
         void CheckDeploymentStatus();
 
         void ScaleDeployment(int numberOfReplicas);
+
+        void InitDeployment();
 
         DeploymentV1 GetDeploymentInfo();
 

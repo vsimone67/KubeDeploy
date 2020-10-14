@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using CommandLine;
 
-namespace KubeDeploy
+namespace KubeDeploy.Options
 {
-    [Verb("full", HelpText = "Build and deploy to cluster")]
-    public class FullBuildOptions : IBaseOptions
+    [Verb("init", HelpText = "Run setup files (configmap and namespace) for project")]
+    public class InitOptions : IBaseOptions
     {
         public string FileName { get; set; }
         public IEnumerable<string> Projects { get; set; }

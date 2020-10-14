@@ -1,9 +1,9 @@
-using System.Runtime.InteropServices;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using CommandLine;
 using KubeDeploy.Models;
+using KubeDeploy.Options;
 using KubernetesExtension;
 using YamlDotNet.RepresentationModel;
 
@@ -26,46 +26,18 @@ namespace KubeDeploy
         }
         public void RunFromCommandLine(string[] args)
         {
-            Parser.Default.ParseArguments<CreateOptions, FullBuildOptions>(args)
+            Parser.Default.ParseArguments<CreateOptions, DeployOptions, PushOptions, BuildOptions, DeleteDeploymentOptions, RemoveFileOptions, InitOptions>(args)
                                             .WithParsed<CreateOptions>(opts => CreateDeployment(opts))
-                                            .WithParsed<FullBuildOptions>(opts => FullDeployToCluster(opts))
-                                            // .WithParsed<DeployOptions>(opts => DeployToCluster(opts))
-                                            // .WithParsed<BuildOptions>(opts => BuildProject(opts))
-                                            // .WithParsed<RemoveDeploymnetOptions>(opts => RemoveDeploymnetFromCluster(opts))
-                                            // .WithParsed<RemoveFileOptions>(opts => RemoveDeploymentFiles(opts))
+                                            .WithParsed<DeployOptions>(opts => DeployToCluster(opts))
+                                            .WithParsed<PushOptions>(opts => PushToCluster(opts))
+                                            .WithParsed<BuildOptions>(opts => BuildProject(opts))
+                                            .WithParsed<DeleteDeploymentOptions>(opts => DeleteDeploymentFromCluster(opts))
+                                            .WithParsed<RemoveFileOptions>(opts => RemoveDeploymentFiles(opts))
+                                            .WithParsed<InitOptions>(opts => InitDeployment(opts))
                                             // .WithParsed<ScaleOptions>(opts => ScaleDeployment(opts))
-                                            // .WithParsed<StatusOptions>(opts => CheckDeploymentStatus(opts))
-                                            //.WithParsed<BooBatOptions>(opts => boobat(opts))
+                                            // .WithParsed<StatusOptions>(opts => CheckDeploymentStatus(opts))                                            
                                             .WithNotParsed(errs => HandleParseError(errs));
         }
-
-        // create kube deploy files from yaml file
-        // create kube deploy files from command line (no yaml)
-        // build and push to repository
-        // build, push to repository, and deploy to cluster
-        // deploy to cluster
-        // delete deployment
-        // remove kube deploy files
-        // scale pods
-        // check deployment
-        private void boobat(BooBatOptions opts)
-        {
-            ParseYamlFile(opts);
-
-            foreach (var service in _services)
-            {
-                _deployment.Name = service.Name;
-                _deployment.NameSpace = _nameSpace;
-                _deployment.ProjectDir = GetProjectName(service.Project);
-                _deployment.KubeDir = opts.KubeDirName;
-                _deployment.DeployType = opts.DeployType;
-                _deployment.DockerHubAccount = _registry;
-                _deployment.Replicas = service.Replicas;
-                _deployment.Port = service.Port;
-                _deployment.CreateDeploymentFiles();
-            }
-        }
-
         private void CreateDeployment(CreateOptions opts)
         {
             ParseYamlFile(opts);
@@ -81,12 +53,10 @@ namespace KubeDeploy
                 _deployment.Replicas = service.Replicas;
                 _deployment.Port = service.Port;
                 _deployment.CreateDeploymentFiles();
+                ConsoleMessage($"Deployment files have been created for {service.Name.Trim()}");
             }
-            ConsoleMessage($"Deployment files have been created for {opts.Name.Trim()}");
-
         }
-
-        private void FullDeployToCluster(FullBuildOptions opts)
+        private void DeployToCluster(DeployOptions opts)
         {
             ParseYamlFile(opts);
 
@@ -96,78 +66,104 @@ namespace KubeDeploy
                 _deployment.NameSpace = _nameSpace;
                 _deployment.ProjectDir = GetProjectName(service.Project);
                 _deployment.KubeDir = opts.KubeDirName;
-                _deployment.BuildAndDeployToCluster();
-                ConsoleMessage($"Full deployment has completed for {opts.Name.Trim()}");
+                _deployment.DeployToCluster();
+                ConsoleMessage($"{service.Name.Trim()} has been deployed to the cluster");
             }
         }
-
-        private void DeployToCluster(DeployOptions opts)
+        private void PushToCluster(PushOptions opts)
         {
-            _deployment.Name = opts.Name.TrimStart();
-            _deployment.NameSpace = opts.NameSpace.TrimStart();
-            _deployment.ProjectDir = opts.ProjectDir.TrimStart();
-            _deployment.KubeDir = opts.KubeDirName;
-            _deployment.DeployToCluster();
-            ConsoleMessage($"Deployment has been completed for {opts.Name.Trim()}");
+            ParseYamlFile(opts);
+
+            foreach (var service in _services)
+            {
+                _deployment.Name = service.Name;
+                _deployment.NameSpace = _nameSpace;
+                _deployment.ProjectDir = GetProjectName(service.Project);
+                _deployment.KubeDir = opts.KubeDirName;
+                _deployment.PushToCluster();
+                ConsoleMessage($"{service.Name.Trim()} has been deployed to the cluster");
+            }
         }
 
         private void BuildProject(BuildOptions opts)
         {
-            _deployment.Name = opts.Name.TrimStart();
-            _deployment.NameSpace = opts.NameSpace.TrimStart();
-            _deployment.ProjectDir = opts.ProjectDir.TrimStart();
-            _deployment.KubeDir = opts.KubeDirName;
-            _deployment.Build();
-            ConsoleMessage($"Deployment {opts.Name.Trim()} has been built and moved to docker hub");
+            ParseYamlFile(opts);
 
+            foreach (var service in _services)
+            {
+                _deployment.Name = service.Name;
+                _deployment.NameSpace = _nameSpace;
+                _deployment.ProjectDir = GetProjectName(service.Project);
+                _deployment.KubeDir = opts.KubeDirName;
+                _deployment.Build();
+                ConsoleMessage($"Deployment {service.Name.Trim()} has been built and moved to docker hub");
+            }
         }
-        private void RemoveDeploymnetFromCluster(RemoveDeploymnetOptions opts)
+        private void DeleteDeploymentFromCluster(DeleteDeploymentOptions opts)
         {
-            _deployment.Name = opts.Name.TrimStart();
-            _deployment.NameSpace = opts.NameSpace.TrimStart();
-            _deployment.ProjectDir = opts.ProjectDir.TrimStart();
-            _deployment.KubeDir = opts.KubeDirName;
-            _deployment.DeleteDeployment();
-            ConsoleMessage($"Deployment has been removed for {opts.Name.Trim()}");
+            ParseYamlFile(opts);
+
+            foreach (var service in _services)
+            {
+                _deployment.Name = service.Name;
+                _deployment.NameSpace = _nameSpace;
+                _deployment.ProjectDir = GetProjectName(service.Project);
+                _deployment.KubeDir = opts.KubeDirName;
+                _deployment.DeleteDeployment();
+                ConsoleMessage($"Deployment {service.Name.Trim()} has been removed from the cluster");
+            }
         }
-
-
         private void RemoveDeploymentFiles(RemoveFileOptions opts)
         {
-            _deployment.Name = opts.Name.TrimStart();
-            _deployment.NameSpace = opts.NameSpace.TrimStart();
-            _deployment.ProjectDir = opts.ProjectDir.TrimStart();
-            _deployment.KubeDir = opts.KubeDirName;
-            _deployment.RemoveDeploymentFiles();
-            ConsoleMessage($"Deployment files have been removed for {opts.Name.Trim()}");
+            ParseYamlFile(opts);
 
+            foreach (var service in _services)
+            {
+                _deployment.Name = service.Name;
+                _deployment.NameSpace = _nameSpace;
+                _deployment.ProjectDir = GetProjectName(service.Project);
+                _deployment.KubeDir = opts.KubeDirName;
+                _deployment.RemoveDeploymentFiles();
+                ConsoleMessage($"Files have been removed from {service.Name.Trim()}");
+            }
         }
 
-        private void ScaleDeployment(ScaleOptions opts)
+        private void InitDeployment(InitOptions opts)
         {
-            _deployment.Name = opts.Name.TrimStart();
-            _deployment.NameSpace = opts.NameSpace.TrimStart();
-            _deployment.ProjectDir = opts.ProjectDir.TrimStart();
-            _deployment.KubeDir = opts.KubeDirName;
+            ParseYamlFile(opts);
 
-            _deployment.ScaleDeployment(opts.Replicas);
-
-            ConsoleMessage($"Deployment {opts.Name.Trim()} has been scaled to {opts.Replicas} replicas");
+            foreach (var service in _services)
+            {
+                _deployment.Name = service.Name;
+                _deployment.NameSpace = _nameSpace;
+                _deployment.ProjectDir = GetProjectName(service.Project);
+                _deployment.KubeDir = opts.KubeDirName;
+                _deployment.InitDeployment();
+                ConsoleMessage($"Deployment namespace and configmap for {service.Name.Trim()} has been created");
+            }
         }
+        // private void ScaleDeployment(ScaleOptions opts)
+        // {
+        //     _deployment.Name = opts.Name.TrimStart();
+        //     _deployment.NameSpace = opts.NameSpace.TrimStart();
+        //     _deployment.ProjectDir = opts.ProjectDir.TrimStart();
+        //     _deployment.KubeDir = opts.KubeDirName;
 
-        private void CheckDeploymentStatus(StatusOptions opts)
-        {
-            _deployment.Name = opts.Name.TrimStart();
-            _deployment.NameSpace = opts.NameSpace.TrimStart();
-            _deployment.KubeDir = opts.KubeDirName;
-            _deployment.CheckDeploymentStatus();
-        }
+        //     _deployment.ScaleDeployment(opts.Replicas);
+
+        //     ConsoleMessage($"Deployment {opts.Name.Trim()} has been scaled to {opts.Replicas} replicas");
+        // }
+
+        // private void CheckDeploymentStatus(StatusOptions opts)
+        // {
+        //     _deployment.Name = opts.Name.TrimStart();
+        //     _deployment.NameSpace = opts.NameSpace.TrimStart();
+        //     _deployment.KubeDir = opts.KubeDirName;
+        //     _deployment.CheckDeploymentStatus();
+        // }
         private void HandleParseError(IEnumerable<Error> errs)
         {
-            //handle errors
-
         }
-
         private void ConsoleMessage(string message)
         {
             var currentColor = Console.ForegroundColor;

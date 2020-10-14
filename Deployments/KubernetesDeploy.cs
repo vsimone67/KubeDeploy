@@ -18,7 +18,7 @@ namespace KubernetesExtension
         public string DockerHubAccount { get; set; }
         public int Port { get; set; }
 
-        public void BuildAndDeployToCluster()
+        public void DeployToCluster()
         {
             var appName = MakeDeploymentName(Name);
             BuildPublishAndDeploy(appName, ProjectDir, KubeDir);
@@ -49,7 +49,7 @@ namespace KubernetesExtension
 
         }
 
-        public void DeployToCluster()
+        public void PushToCluster()
         {
 
             if (!HasDeploymnet())
@@ -99,6 +99,18 @@ namespace KubernetesExtension
             string deploymentName = MakeDeploymentName(Name);
             KuberntesConnection kubernetesConnection = new KuberntesConnection();
             kubernetesConnection.ScaleDeployment(deploymentName, numberOfReplicas, kNameSpace);
+        }
+
+        public void InitDeployment()
+        {
+            // create namespace
+            var psCommand = $"./createconfigs.ps1";
+            var psDir = $"{ProjectDir}\\{KubeDir}";
+            Utils.RunProcess("powershell.exe", psCommand, psDir, true, Process_OutputDataReceived, Process_ErrorDataReceived);
+
+            // create configmaps
+            psCommand = $"./createnamespace.ps1";
+            Utils.RunProcess("powershell.exe", psCommand, psDir, true, Process_OutputDataReceived, Process_ErrorDataReceived);
         }
 
         public DeploymentV1 GetDeploymentInfo()
