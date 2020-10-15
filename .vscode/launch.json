@@ -17,9 +17,12 @@
         // "traefiktest",
         // "--projdir",
         // "D:\\VS2019\\PlayGround\\TraefikTest"
-        "BooBat",
+        "init",
+         "-e",
+         "ApiGateway",
+         "AuthService",
          "-f",
-         "D:\\VS2019\\PlayGround\\POC\\tye.yaml"
+         "D:\\VS2019\\PlayGround\\POC\\Tye.yaml"
       ],
       "cwd": "${workspaceFolder}",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console

@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -173,37 +174,51 @@ namespace KubeDeploy
             Console.ForegroundColor = currentColor;
         }
 
+        private void ConsoleErrorMessage(string message)
+        {
+            var currentColor = Console.ForegroundColor;
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(message);
+            Console.ForegroundColor = currentColor;
+        }
+
         private void ParseYamlFile(IBaseOptions options)
         {
-            var input = new StreamReader(options.FileName);
-
-
-            // Load the stream
-            var yaml = new YamlStream();
-            yaml.Load(input);
-
-            // Examine the stream
-            var mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
-
-            _deployName = mapping.Children["name"].ToString();
-            _nameSpace = mapping.Children["namespace"].ToString();
-            _registry = mapping.Children["registry"].ToString();
-
-            // Gather all the service info and save it
-            var items = (YamlSequenceNode)mapping.Children[new YamlScalarNode("services")];
-            foreach (YamlMappingNode item in items)
+            if (File.Exists(options.FileName))
             {
-                var binding = (YamlSequenceNode)item.Children[new YamlScalarNode("bindings")];
-                var port = binding.Children[0][new YamlScalarNode("port")].ToString();
-                var name = item.Children[new YamlScalarNode("name")].ToString();
-                var project = item.Children[new YamlScalarNode("project")].ToString();
+                var input = new StreamReader(options.FileName);
+                // Load the stream
+                var yaml = new YamlStream();
+                yaml.Load(input);
 
-                var replicas = 1;
-                if (item.Children.ContainsKey("replicas"))
-                    replicas = int.Parse(item.Children[new YamlScalarNode("replicas")].ToString());
+                // Examine the stream
+                var mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
 
-                _services.Add(new ServiceInfo() { Name = name, Project = project, Port = int.Parse(port), Replicas = replicas });
+                _deployName = mapping.Children["name"].ToString();
+                _nameSpace = mapping.Children["namespace"].ToString();
+                _registry = mapping.Children["registry"].ToString();
 
+                // Gather all the service info and save it
+                var items = (YamlSequenceNode)mapping.Children[new YamlScalarNode("services")];
+                foreach (YamlMappingNode item in items)
+                {
+                    var binding = (YamlSequenceNode)item.Children[new YamlScalarNode("bindings")];
+                    var port = binding.Children[0][new YamlScalarNode("port")].ToString();
+                    var name = item.Children[new YamlScalarNode("name")].ToString();
+                    var project = item.Children[new YamlScalarNode("project")].ToString();
+
+                    var replicas = 1;
+                    if (item.Children.ContainsKey("replicas"))
+                        replicas = int.Parse(item.Children[new YamlScalarNode("replicas")].ToString());
+
+                    if (!options.Projects.Contains(name))
+                        _services.Add(new ServiceInfo() { Name = name, Project = project, Port = int.Parse(port), Replicas = replicas });
+                }
+            }
+            else
+            {
+                ConsoleErrorMessage($"File {options.FileName} does not exist");
             }
 
 
