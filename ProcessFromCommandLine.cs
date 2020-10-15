@@ -220,8 +220,6 @@ namespace KubeDeploy
             {
                 ConsoleErrorMessage($"File {options.FileName} does not exist");
             }
-
-
         }
 
         private string GetProjectName(string project)

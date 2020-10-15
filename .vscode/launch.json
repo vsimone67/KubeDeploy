@@ -17,12 +17,16 @@
         // "traefiktest",
         // "--projdir",
         // "D:\\VS2019\\PlayGround\\TraefikTest"
-        "init",
-         "-e",
-         "ApiGateway",
-         "AuthService",
-         "-f",
-         "D:\\VS2019\\PlayGround\\POC\\Tye.yaml"
+        // "init",
+        //  "-e",
+        //  "ApiGateway",
+        //  "AuthService",
+        //  "-f",
+        //  "D:\\VS2019\\PlayGround\\POC\\Tye.yaml"
+         "deploy",
+          "-f",
+          "D:\\VS2019\\PlayGround\\POC\\Tye.yaml"
+        
       ],
       "cwd": "${workspaceFolder}",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console

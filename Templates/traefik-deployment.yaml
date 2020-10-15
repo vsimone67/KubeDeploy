@@ -21,30 +21,30 @@ spec:
       containers:
         - name: NAMEGOESHERE-pod
           image: vsimone67/NAMEGOESHERE:latest
-          imagePullPolicy: "Always"
+          imagePullPolicy: 'Always'
           ports:
             - name: http
               containerPort: 80
           env:
-            - name: "appdirectory"
-              value: "/app/settings/"
+            - name: 'appdirectory'
+              value: '/app/settings/'
           volumeMounts:
             - name: configs
-              mountPath: "/app/settings"
+              mountPath: '/app/settings'
           livenessProbe:
-           httpGet:
-             path: /health
-             port: 80
-           initialDelaySeconds: 5
-           periodSeconds: 5        
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
       volumes:
-            - name: configs
-              projected:
-                sources:
-                  - configMap:
-                      name: appsettings-NAMEGOESHERE
-                  - secret:
-                      name: appsettings-secret-NAMEGOESHERE"
+        - name: configs
+          projected:
+            sources:
+              - configMap:
+                  name: appsettings-NAMEGOESHERE
+              - secret:
+                  name: appsettings-secret-NAMEGOESHERE"
 ---
 apiVersion: v1
 kind: Service
@@ -54,9 +54,9 @@ metadata:
 spec:
   ports:
     - name: web
-      port: 80      
+      port: 80
   selector:
-    app: NAMEGOESHERE  
+    app: NAMEGOESHERE
 ---
 kind: IngressRoute
 apiVersion: traefik.containo.us/v1alpha1
@@ -67,11 +67,11 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`DNSHERE`) && PathPrefix(`/PATHPREFIXHERE`)
-      kind: Rule
-      services:
-        - name: NAMEGOESHERE-svc
-          port: 80
+    # - match: Host(`DNSHERE`) && PathPrefix(`/PATHPREFIXHERE`)
+    #   kind: Rule
+    #   services:
+    #     - name: NAMEGOESHERE-svc
+    #       port: 80
     - match: Host(`DNSHERE`)
       kind: Rule
       services:
