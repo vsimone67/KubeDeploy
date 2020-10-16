@@ -39,7 +39,7 @@ spec:
               - configMap:
                   name: appsettings-NAMEGOESHERE
               - secret:
-                  name: appsettings-secret-NAMEGOESHERE"
+                  name: appsettings-secret-NAMEGOESHERE
 ---
 apiVersion: v1
 kind: Service
