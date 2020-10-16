@@ -27,17 +27,25 @@ namespace KubeDeploy
         }
         public void RunFromCommandLine(string[] args)
         {
-            Parser.Default.ParseArguments<CreateOptions, DeployOptions, PushOptions, BuildOptions, DeleteDeploymentOptions, CleanFileOptions, InitOptions>(args)
-                                            .WithParsed<CreateOptions>(opts => CreateDeployment(opts))
-                                            .WithParsed<DeployOptions>(opts => DeployToCluster(opts))
-                                            .WithParsed<PushOptions>(opts => PushToCluster(opts))
-                                            .WithParsed<BuildOptions>(opts => BuildProject(opts))
-                                            .WithParsed<DeleteDeploymentOptions>(opts => DeleteDeploymentFromCluster(opts))
-                                            .WithParsed<CleanFileOptions>(opts => CleanDeploymentFiles(opts))
-                                            .WithParsed<InitOptions>(opts => InitDeployment(opts))
-                                            // .WithParsed<ScaleOptions>(opts => ScaleDeployment(opts))
-                                            // .WithParsed<StatusOptions>(opts => CheckDeploymentStatus(opts))                                            
-                                            .WithNotParsed(errs => HandleParseError(errs));
+
+            try
+            {
+                Parser.Default.ParseArguments<CreateOptions, DeployOptions, PushOptions, BuildOptions, DeleteDeploymentOptions, CleanFileOptions, InitOptions>(args)
+                                                .WithParsed<CreateOptions>(opts => CreateDeployment(opts))
+                                                .WithParsed<DeployOptions>(opts => DeployToCluster(opts))
+                                                .WithParsed<PushOptions>(opts => PushToCluster(opts))
+                                                .WithParsed<BuildOptions>(opts => BuildProject(opts))
+                                                .WithParsed<DeleteDeploymentOptions>(opts => DeleteDeploymentFromCluster(opts))
+                                                .WithParsed<CleanFileOptions>(opts => CleanDeploymentFiles(opts))
+                                                .WithParsed<InitOptions>(opts => InitDeployment(opts))
+                                                // .WithParsed<ScaleOptions>(opts => ScaleDeployment(opts))
+                                                // .WithParsed<StatusOptions>(opts => CheckDeploymentStatus(opts))                                            
+                                                .WithNotParsed(errs => HandleParseError(errs));
+            }
+            catch (Exception ex)
+            {
+                ConsoleErrorMessage(ex.Message);
+            }
         }
         private void CreateDeployment(CreateOptions opts)
         {

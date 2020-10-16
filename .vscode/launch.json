@@ -17,7 +17,7 @@
         // "traefiktest",
         // "--projdir",
         // "D:\\VS2019\\PlayGround\\TraefikTest"
-        "init",
+        "create",
          "-i",
          "apigateway",
          "authservice"

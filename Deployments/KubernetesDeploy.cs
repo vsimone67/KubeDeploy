@@ -9,6 +9,7 @@ namespace KubernetesExtension
 {
     public class KubernetesDeploy : DeployBase, IDeployment
     {
+        const string dnsSuffix = ".titan";
         public string Name { get; set; }
         public string NameSpace { get; set; }
         public string ProjectDir { get; set; }
@@ -26,14 +27,16 @@ namespace KubernetesExtension
 
         public void CreateDeploymentFiles()
         {
-
             Directory.CreateDirectory($"{ProjectDir}\\{KubeDir}");
 
             string deployYaml = GetKubeYamlText(DeployType);
             string configYaml = GetSettingsForScript();
             string deployScript = GetSettingsForKubeDeployScript();
+            string dockerFile = GetDockerFile();
+
             deployYaml = deployYaml.Replace("NAMEGOESHERE", MakeDeploymentName(Name));
             deployYaml = deployYaml.Replace("NAMESPACEGOESHERE", NameSpace);
+            deployYaml = deployYaml.Replace("DNSHERE", MakeDns(Name));
 
             configYaml = configYaml.Replace("NAMEGOESHERE", MakeDeploymentName(Name));
             configYaml = configYaml.Replace("NAMESPACEGOESHERE", NameSpace);
@@ -41,17 +44,18 @@ namespace KubernetesExtension
             deployScript = deployScript.Replace("NAMEGOESHERE", MakeDeploymentName(Name));
             deployScript = deployScript.Replace("NAMESPACEGOESHERE", NameSpace);
 
+            dockerFile = dockerFile.Replace("SERVICENAME", ProjectDir);
+
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\deployment.yaml", deployYaml);
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\createconfigs.ps1", configYaml);
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\deploy.ps1", GetPowerShellDeployScript());
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\createnamespace.ps1", GetNamespaceScript());
-            File.WriteAllText($"{ProjectDir}\\kube.ps1", deployScript);
+            File.WriteAllText($"{ProjectDir}\\Dockerfile", dockerFile);
 
         }
 
         public void PushToCluster()
         {
-
             if (!HasDeploymnet())
             {
                 DeployAllToCluster();
@@ -72,6 +76,10 @@ namespace KubernetesExtension
             retval = deployments.Items.Any(exp => exp.Metadata.Name.ToUpper() == appName.ToUpper());
             return retval;
         }
+        public bool KubeDirExists()
+        {
+            return Directory.Exists($"{ProjectDir}\\{KubeDir}");
+        }
 
         public void DeleteDeployment()
         {
@@ -83,7 +91,6 @@ namespace KubernetesExtension
 
         public void CheckDeploymentStatus()
         {
-
             var appName = MakeDeploymentName(Name);
             var projectDir = Path.GetDirectoryName(ProjectDir);
             var yamlDir = $"{projectDir}\\{KubeDir}";
@@ -103,6 +110,10 @@ namespace KubernetesExtension
 
         public void InitDeployment()
         {
+
+            if (!KubeDirExists())
+                throw new Exception("Kubernetes files do not exist, please run create");
+
             var psDir = $"{ProjectDir}\\{KubeDir}";
 
             // create namespace
@@ -125,6 +136,8 @@ namespace KubernetesExtension
 
         protected void DeployAllToCluster()
         {
+            if (!KubeDirExists())
+                throw new Exception("Kubernetes files do not exist, please run create");
 
             var yamlDir = $"{ProjectDir}\\{KubeDir}";
             var kubeCommand = "apply -f deployment.yaml";
@@ -134,6 +147,9 @@ namespace KubernetesExtension
 
         protected void UpdateDeployment()
         {
+            if (!KubeDirExists())
+                throw new Exception("Kubernetes files do not exist, please run create");
+
             var appName = MakeDeploymentName(Name);
             var yamlDir = $"{ProjectDir}\\{KubeDir}";
             var knamespace = GetNameSpaceFromYaml(ProjectDir, KubeDir);
@@ -143,6 +159,9 @@ namespace KubernetesExtension
 
         public void Build()
         {
+            if (!KubeDirExists())
+                throw new Exception("Kubernetes files do not exist, please run create");
+
             var appName = MakeDeploymentName(Name);
             BuildAndPublishDockerImage(appName, ProjectDir, KubeDir);
 
@@ -167,12 +186,21 @@ namespace KubernetesExtension
 
         private string GetKubeYamlText(string deployType)
         {
-
             string fileName = $"{deployType}-deployment.yaml";
-
             var rootDir = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             return File.ReadAllText($"{rootDir}/Templates/{fileName}");
+        }
 
+        private string GetDockerFile()
+        {
+            string fileName = $"DockerFile";
+            var rootDir = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            return File.ReadAllText($"{rootDir}/Templates/{fileName}");
+        }
+
+        private string MakeDns(string name)
+        {
+            return name.Replace("service", "") + dnsSuffix;
         }
     }
 
