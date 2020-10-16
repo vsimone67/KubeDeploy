@@ -77,7 +77,7 @@ namespace KubernetesExtension
 
         protected void BuildPublishAndDeploy(string appName, string projectDir, string deployDir)
         {
-            var psCommand = $"./deploy.ps1 -appName {appName} -projectDir {projectDir}";
+            var psCommand = $"./deploy.ps1 -appName {appName} -projectDir ..";
             var psDir = $"{projectDir}\\{deployDir}";
             Utils.RunProcess("powershell.exe", psCommand, psDir, true, Process_OutputDataReceived, Process_ErrorDataReceived, Process_DockerBuildComplete);
         }

@@ -11,6 +11,6 @@ param(
 )
 
 Set-Location $projectDir
-docker build -t $appName -f "$($projectDir)\dockerfile".
+docker build -t $appName -f "dockerfile".
 docker tag "$($appName):latest" vsimone67/"$($appName):latest"
 docker push vsimone67/"$($appName):latest";

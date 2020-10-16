@@ -3,8 +3,8 @@ using CommandLine;
 
 namespace KubeDeploy
 {
-    [Verb("remove", HelpText = "Delete deployment files from project")]
-    public class RemoveFileOptions : IBaseOptions
+    [Verb("clean", HelpText = "Delete deployment files from project")]
+    public class CleanFileOptions : IBaseOptions
     {
         public string FileName { get; set; }
         public IEnumerable<string> Projects { get; set; }

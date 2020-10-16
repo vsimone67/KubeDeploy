@@ -27,13 +27,13 @@ namespace KubeDeploy
         }
         public void RunFromCommandLine(string[] args)
         {
-            Parser.Default.ParseArguments<CreateOptions, DeployOptions, PushOptions, BuildOptions, DeleteDeploymentOptions, RemoveFileOptions, InitOptions>(args)
+            Parser.Default.ParseArguments<CreateOptions, DeployOptions, PushOptions, BuildOptions, DeleteDeploymentOptions, CleanFileOptions, InitOptions>(args)
                                             .WithParsed<CreateOptions>(opts => CreateDeployment(opts))
                                             .WithParsed<DeployOptions>(opts => DeployToCluster(opts))
                                             .WithParsed<PushOptions>(opts => PushToCluster(opts))
                                             .WithParsed<BuildOptions>(opts => BuildProject(opts))
                                             .WithParsed<DeleteDeploymentOptions>(opts => DeleteDeploymentFromCluster(opts))
-                                            .WithParsed<RemoveFileOptions>(opts => RemoveDeploymentFiles(opts))
+                                            .WithParsed<CleanFileOptions>(opts => CleanDeploymentFiles(opts))
                                             .WithParsed<InitOptions>(opts => InitDeployment(opts))
                                             // .WithParsed<ScaleOptions>(opts => ScaleDeployment(opts))
                                             // .WithParsed<StatusOptions>(opts => CheckDeploymentStatus(opts))                                            
@@ -114,7 +114,7 @@ namespace KubeDeploy
                 ConsoleMessage($"Deployment {service.Name.Trim()} has been removed from the cluster");
             }
         }
-        private void RemoveDeploymentFiles(RemoveFileOptions opts)
+        private void CleanDeploymentFiles(CleanFileOptions opts)
         {
             ParseYamlFile(opts);
 
@@ -205,7 +205,7 @@ namespace KubeDeploy
                 {
                     var binding = (YamlSequenceNode)item.Children[new YamlScalarNode("bindings")];
                     var port = binding.Children[0][new YamlScalarNode("port")].ToString();
-                    var name = item.Children[new YamlScalarNode("name")].ToString();
+                    var name = item.Children[new YamlScalarNode("name")].ToString().ToLower();
                     var project = item.Children[new YamlScalarNode("project")].ToString();
 
                     var replicas = 1;

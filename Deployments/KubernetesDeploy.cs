@@ -20,8 +20,8 @@ namespace KubernetesExtension
 
         public void DeployToCluster()
         {
-            var appName = MakeDeploymentName(Name);
-            BuildPublishAndDeploy(appName, ProjectDir, KubeDir);
+            //var appName = MakeDeploymentName(Name);
+            BuildPublishAndDeploy(Name, ProjectDir, KubeDir);
         }
 
         public void CreateDeploymentFiles()
@@ -103,14 +103,16 @@ namespace KubernetesExtension
 
         public void InitDeployment()
         {
-            // create namespace
-            var psCommand = $"./createconfigs.ps1";
             var psDir = $"{ProjectDir}\\{KubeDir}";
+
+            // create namespace
+            var psCommand = $"./createnamespace.ps1";
             Utils.RunProcess("powershell.exe", psCommand, psDir, true, Process_OutputDataReceived, Process_ErrorDataReceived);
 
-            // create configmaps
-            psCommand = $"./createnamespace.ps1";
+            // create config
+            psCommand = $"./createconfigs.ps1";
             Utils.RunProcess("powershell.exe", psCommand, psDir, true, Process_OutputDataReceived, Process_ErrorDataReceived);
+
         }
 
         public DeploymentV1 GetDeploymentInfo()
@@ -153,7 +155,7 @@ namespace KubernetesExtension
         protected override void Process_DockerBuildComplete(object sender, EventArgs e)
         {
             System.Threading.Tasks.Task.Delay(5000).Wait();
-            DeployToCluster();
+            PushToCluster();
         }
 
         #region Yaml/PS file contents
