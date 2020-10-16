@@ -16,7 +16,7 @@ namespace KubeDeploy
         [Option('f', "filename", Required = false, HelpText = "Yaml file to use for deploy", Default = "tye.yaml")]
         string FileName { get; set; }
 
-        [Option('e', "exclude", Required = false, HelpText = "Projects to exclude from YAML file")]
+        [Option('i', "include", Required = false, HelpText = "Only act on specified projects")]
         IEnumerable<string> Projects { get; set; }
 
         [Option("kubedir", Required = false, HelpText = "Name to Use For Proj Dir When Created", Default = "k8")]

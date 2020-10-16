@@ -12,20 +12,20 @@
       // If you have changed target frameworks, make sure to update the program path.
       "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/KubeDeploy.dll",
       "args": [
-        // "build",
+        //"build",
         // "--name",
         // "traefiktest",
         // "--projdir",
         // "D:\\VS2019\\PlayGround\\TraefikTest"
-        // "init",
-        //  "-e",
-        //  "ApiGateway",
-        //  "AuthService",
-        //  "-f",
-        //  "D:\\VS2019\\PlayGround\\POC\\Tye.yaml"
-         "deploy",
+        "init",
+         "-i",
+         "apigateway",
+         "authservice"
           "-f",
           "D:\\VS2019\\PlayGround\\POC\\Tye.yaml"
+        //  "deploy",
+        //   "-f",
+        //   "D:\\VS2019\\PlayGround\\POC\\Tye.yaml"
         
       ],
       "cwd": "${workspaceFolder}",

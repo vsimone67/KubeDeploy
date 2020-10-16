@@ -212,7 +212,7 @@ namespace KubeDeploy
                     if (item.Children.ContainsKey("replicas"))
                         replicas = int.Parse(item.Children[new YamlScalarNode("replicas")].ToString());
 
-                    if (!options.Projects.Contains(name))
+                    if (options.Projects.Contains(name) || options.Projects.Count() == 0)
                         _services.Add(new ServiceInfo() { Name = name, Project = project, Port = int.Parse(port), Replicas = replicas });
                 }
             }
