@@ -30,7 +30,8 @@ namespace KubeDeploy
 
             try
             {
-                Parser.Default.ParseArguments<CreateOptions, DeployOptions, PushOptions, BuildOptions, DeleteDeploymentOptions, CleanFileOptions, InitOptions>(args)
+                Parser.Default.ParseArguments<CreateOptions, DeployOptions, PushOptions, BuildOptions, DeleteDeploymentOptions,
+                                              CleanFileOptions, InitOptions, StatusOptions, ScaleOptions>(args)
                                                 .WithParsed<CreateOptions>(opts => CreateDeployment(opts))
                                                 .WithParsed<DeployOptions>(opts => DeployToCluster(opts))
                                                 .WithParsed<PushOptions>(opts => PushToCluster(opts))
@@ -38,8 +39,8 @@ namespace KubeDeploy
                                                 .WithParsed<DeleteDeploymentOptions>(opts => DeleteDeploymentFromCluster(opts))
                                                 .WithParsed<CleanFileOptions>(opts => CleanDeploymentFiles(opts))
                                                 .WithParsed<InitOptions>(opts => InitDeployment(opts))
-                                                // .WithParsed<ScaleOptions>(opts => ScaleDeployment(opts))
-                                                // .WithParsed<StatusOptions>(opts => CheckDeploymentStatus(opts))                                            
+                                                .WithParsed<ScaleOptions>(opts => ScaleDeployment(opts))
+                                                .WithParsed<StatusOptions>(opts => CheckDeploymentStatus(opts))
                                                 .WithNotParsed(errs => HandleParseError(errs));
             }
             catch (Exception ex)
@@ -151,25 +152,34 @@ namespace KubeDeploy
                 ConsoleMessage($"Deployment namespace and configmap for {service.Name.Trim()} has been created");
             }
         }
-        // private void ScaleDeployment(ScaleOptions opts)
-        // {
-        //     _deployment.Name = opts.Name.TrimStart();
-        //     _deployment.NameSpace = opts.NameSpace.TrimStart();
-        //     _deployment.ProjectDir = opts.ProjectDir.TrimStart();
-        //     _deployment.KubeDir = opts.KubeDirName;
+        private void ScaleDeployment(ScaleOptions opts)
+        {
+            ParseYamlFile(opts);
 
-        //     _deployment.ScaleDeployment(opts.Replicas);
+            foreach (var service in _services)
+            {
+                _deployment.Name = service.Name;
+                _deployment.NameSpace = _nameSpace;
+                _deployment.ProjectDir = GetProjectName(service.Project);
+                _deployment.KubeDir = opts.KubeDirName;
+                _deployment.ScaleDeployment(opts.Replicas);
+                ConsoleMessage($"Deployment {service.Name} has been scaled to {opts.Replicas} replicas");
+            }
+        }
 
-        //     ConsoleMessage($"Deployment {opts.Name.Trim()} has been scaled to {opts.Replicas} replicas");
-        // }
+        private void CheckDeploymentStatus(StatusOptions opts)
+        {
+            ParseYamlFile(opts);
 
-        // private void CheckDeploymentStatus(StatusOptions opts)
-        // {
-        //     _deployment.Name = opts.Name.TrimStart();
-        //     _deployment.NameSpace = opts.NameSpace.TrimStart();
-        //     _deployment.KubeDir = opts.KubeDirName;
-        //     _deployment.CheckDeploymentStatus();
-        // }
+            foreach (var service in _services)
+            {
+                _deployment.Name = service.Name;
+                _deployment.NameSpace = _nameSpace;
+                _deployment.ProjectDir = GetProjectName(service.Project);
+                _deployment.KubeDir = opts.KubeDirName;
+                _deployment.CheckDeploymentStatus();
+            }
+        }
         private void HandleParseError(IEnumerable<Error> errs)
         {
         }

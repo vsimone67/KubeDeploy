@@ -11,6 +11,12 @@ namespace KubeDeploy
 
     }
 
+    public interface IScaleOptions : IBaseOptions
+    {
+        [Option('r', "replicas", Required = false, HelpText = "Number of replicas to scale the deplolyment to")]
+        public int Replicas { get; set; }
+    }
+
     public interface IBaseOptions
     {
         [Option('f', "filename", Required = false, HelpText = "Yaml file to use for deploy", Default = "tye.yaml")]
