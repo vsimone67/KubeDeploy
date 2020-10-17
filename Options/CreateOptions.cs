@@ -10,5 +10,6 @@ namespace KubeDeploy
         public IEnumerable<string> Projects { get; set; }
         public string KubeDirName { get; set; }
         public string DeployType { get; set; }
+        public string Dns { get; set; }
     }
 }

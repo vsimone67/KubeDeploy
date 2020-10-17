@@ -6,8 +6,11 @@ namespace KubeDeploy
     public interface ICreateOptions : IBaseOptions
     {
 
-        [Option("deploy-type", Required = false, HelpText = "The deploy type you are createing (basic, full, traefik, traefik-basic)", Default = "traefik")]
+        [Option('t', "type", Required = false, HelpText = "The deploy type you are createing (basic, full, traefik, traefik-basic)", Default = "traefik")]
         public string DeployType { get; set; }
+
+        [Option('d', "dns", Required = false, HelpText = "The DNS to use for all traefik routing", Default = "facpoc.titan")]
+        public string Dns { get; set; }
 
     }
 
@@ -25,7 +28,7 @@ namespace KubeDeploy
         [Option('i', "include", Required = false, HelpText = "Only act on specified projects")]
         IEnumerable<string> Projects { get; set; }
 
-        [Option("kubedir", Required = false, HelpText = "Name to Use For Proj Dir When Created", Default = "k8")]
+        [Option('k', "kubedir", Required = false, HelpText = "Name to Use For Proj Dir When Created", Default = "k8")]
         public string KubeDirName { get; set; }
     }
 }

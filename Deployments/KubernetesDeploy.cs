@@ -18,6 +18,7 @@ namespace KubernetesExtension
         public string DeployType { get; set; }
         public string DockerHubAccount { get; set; }
         public int Port { get; set; }
+        public string Dns { get; set; }
 
         public void DeployToCluster()
         {
@@ -36,7 +37,9 @@ namespace KubernetesExtension
 
             deployYaml = deployYaml.Replace("NAMEGOESHERE", MakeDeploymentName(Name));
             deployYaml = deployYaml.Replace("NAMESPACEGOESHERE", NameSpace);
-            deployYaml = deployYaml.Replace("DNSHERE", MakeDns(Name));
+            deployYaml = deployYaml.Replace("DNSHERE", Dns);
+            deployYaml = deployYaml.Replace("ACTUATOR", Name);
+            deployYaml = deployYaml.Replace("SERVICENAME", Name.Replace("service", ""));
 
             configYaml = configYaml.Replace("NAMEGOESHERE", MakeDeploymentName(Name));
             configYaml = configYaml.Replace("NAMESPACEGOESHERE", NameSpace);
@@ -50,6 +53,7 @@ namespace KubernetesExtension
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\createconfigs.ps1", configYaml);
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\deploy.ps1", GetPowerShellDeployScript());
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\createnamespace.ps1", GetNamespaceScript());
+            File.WriteAllText($"{ProjectDir}\\{KubeDir}\\middleware.yaml", GetMiddleWare());
             File.WriteAllText($"{ProjectDir}\\Dockerfile", dockerFile);
 
         }
@@ -124,6 +128,10 @@ namespace KubernetesExtension
             psCommand = $"./createconfigs.ps1";
             Utils.RunProcess("powershell.exe", psCommand, psDir, true, Process_OutputDataReceived, Process_ErrorDataReceived);
 
+            // create config
+            psCommand = $"apply -f middleware.yaml";
+            Utils.RunProcess("kubectl.exe", psCommand, psDir, true, Process_OutputDataReceived, Process_ErrorDataReceived);
+
         }
 
         public DeploymentV1 GetDeploymentInfo()
@@ -184,20 +192,26 @@ namespace KubernetesExtension
             return $"kubectl create namespace { NameSpace}";
         }
 
+        private string GetMiddleWare()
+        {
+            return GetFile("middleware.yaml");
+        }
         private string GetKubeYamlText(string deployType)
         {
             string fileName = $"{deployType}-deployment.yaml";
-            var rootDir = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            return File.ReadAllText($"{rootDir}/Templates/{fileName}");
+            return GetFile(fileName);
         }
-
         private string GetDockerFile()
         {
             string fileName = $"DockerFile";
+            return GetFile(fileName);
+        }
+
+        private string GetFile(string fileName)
+        {
             var rootDir = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             return File.ReadAllText($"{rootDir}/Templates/{fileName}");
         }
-
         private string MakeDns(string name)
         {
             return name.Replace("service", "") + dnsSuffix;

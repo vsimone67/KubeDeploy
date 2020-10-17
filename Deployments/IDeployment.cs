@@ -30,8 +30,8 @@ namespace KubernetesExtension
         int Replicas { get; set; }
         string DeployType { get; set; }
         string DockerHubAccount { get; set; }
-
         int Port { get; set; }
+        string Dns { get; set; }
 
 
 

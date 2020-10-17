@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Linq;
 using System;
 using System.Collections.Generic;
@@ -62,6 +63,7 @@ namespace KubeDeploy
                 _deployment.DockerHubAccount = _registry;
                 _deployment.Replicas = service.Replicas;
                 _deployment.Port = service.Port;
+                _deployment.Dns = opts.Dns;
                 _deployment.CreateDeploymentFiles();
                 ConsoleMessage($"Deployment files have been created for {service.Name.Trim()}");
             }
@@ -78,6 +80,7 @@ namespace KubeDeploy
                 _deployment.KubeDir = opts.KubeDirName;
                 _deployment.DeployToCluster();
                 ConsoleMessage($"{service.Name.Trim()} has been deployed to the cluster");
+                _deployment.CheckDeploymentStatus();
             }
         }
         private void PushToCluster(PushOptions opts)
@@ -92,6 +95,7 @@ namespace KubeDeploy
                 _deployment.KubeDir = opts.KubeDirName;
                 _deployment.PushToCluster();
                 ConsoleMessage($"{service.Name.Trim()} has been deployed to the cluster");
+                _deployment.CheckDeploymentStatus();
             }
         }
 

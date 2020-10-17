@@ -42,13 +42,32 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`DNSHERE`) && PathPrefix(`/PATHPREFIXHERE`)
+    # - match: Host(`DNSHERE`) && PathPrefix(`/PATHPREFIXHERE`)
+    #   kind: Rule
+    #   services:
+    #     - name: NAMEGOESHERE-svc
+    #       port: 80
+    # - match: Host(`DNSHERE`)
+    #   kind: Rule
+    #   services:
+    #     - name: NAMEGOESHERE-svc
+    #       port: 80
+    - match: Host(`DNSHERE`) && PathPrefix(`/SERVICENAME/{catchall}`)
       kind: Rule
       services:
         - name: NAMEGOESHERE-svc
           port: 80
-    - match: Host(`DNSHERE`)
+    - match: Host(`DNSHERE`) && PathPrefix(`/ACTUATOR/health`)
       kind: Rule
       services:
         - name: NAMEGOESHERE-svc
           port: 80
+      middlewares:
+        - name: st-healthcheck
+    - match: Host(`DNSHERE`) && PathPrefix(`/ACTUATOR/metrics`)
+      kind: Rule
+      services:
+        - name: NAMEGOESHERE-svc
+          port: 80
+      middlewares:
+        - name: st-metrics

@@ -37,6 +37,10 @@
      <None Update="Templates\Dockerfile">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+
+    <None Update="Templates\middleware.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   
   </ItemGroup>   
 
