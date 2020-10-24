@@ -78,6 +78,7 @@ namespace KubeDeploy
                 _deployment.NameSpace = _nameSpace;
                 _deployment.ProjectDir = GetProjectName(service.Project);
                 _deployment.KubeDir = opts.KubeDirName;
+                _deployment.DockerHubAccount = _registry;
                 _deployment.DeployToCluster();
                 ConsoleMessage($"{service.Name.Trim()} has been deployed to the cluster");
                 _deployment.CheckDeploymentStatus();
@@ -93,6 +94,7 @@ namespace KubeDeploy
                 _deployment.NameSpace = _nameSpace;
                 _deployment.ProjectDir = GetProjectName(service.Project);
                 _deployment.KubeDir = opts.KubeDirName;
+                _deployment.DockerHubAccount = _registry;
                 _deployment.PushToCluster();
                 ConsoleMessage($"{service.Name.Trim()} has been deployed to the cluster");
                 _deployment.CheckDeploymentStatus();
@@ -109,6 +111,7 @@ namespace KubeDeploy
                 _deployment.NameSpace = _nameSpace;
                 _deployment.ProjectDir = GetProjectName(service.Project);
                 _deployment.KubeDir = opts.KubeDirName;
+                _deployment.DockerHubAccount = _registry;
                 _deployment.Build();
                 ConsoleMessage($"Deployment {service.Name.Trim()} has been built and moved to docker hub");
             }

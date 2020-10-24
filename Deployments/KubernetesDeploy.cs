@@ -162,6 +162,8 @@ namespace KubernetesExtension
             var yamlDir = $"{ProjectDir}\\{KubeDir}";
             var knamespace = GetNameSpaceFromYaml(ProjectDir, KubeDir);
             var kubeCommand = $"set image deployment/{appName} {appName}-pod={DockerHubAccount}/{appName} --namespace {knamespace} --record";
+
+            Console.WriteLine($"The kube command is {kubeCommand}");
             Utils.RunProcess("kubectl.exe", kubeCommand, yamlDir, true, Process_OutputDataReceived, Process_ErrorDataReceived);
         }
 
