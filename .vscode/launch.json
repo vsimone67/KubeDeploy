@@ -12,11 +12,21 @@
       // If you have changed target frameworks, make sure to update the program path.
       "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/KubeDeploy.dll",
       "args": [
-        "build",
-        "--name",
-        "traefiktest",
-        "--projdir",
-        "D:\\VS2019\\PlayGround\\TraefikTest"
+        //"build",
+        // "--name",
+        // "traefiktest",
+        // "--projdir",
+        // "D:\\VS2019\\PlayGround\\TraefikTest"
+        "create",
+         "-i",
+         "apigateway",
+         "authservice"
+          "-f",
+          "D:\\VS2019\\PlayGround\\POC\\Tye.yaml"
+        //  "deploy",
+        //   "-f",
+        //   "D:\\VS2019\\PlayGround\\POC\\Tye.yaml"
+        
       ],
       "cwd": "${workspaceFolder}",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console

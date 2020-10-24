@@ -3,13 +3,12 @@ using CommandLine;
 
 namespace KubeDeploy
 {
-    [Verb("create", HelpText = "Create new deployment files.")]
-    public class CreateOptions : ICreateOptions
+    [Verb("clean", HelpText = "Delete deployment files from project")]
+    public class CleanFileOptions : IBaseOptions
     {
         public string FileName { get; set; }
         public IEnumerable<string> Projects { get; set; }
         public string KubeDirName { get; set; }
-        public string DeployType { get; set; }
-        public string Dns { get; set; }
     }
+
 }

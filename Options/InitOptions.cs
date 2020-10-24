@@ -1,15 +1,14 @@
 using System.Collections.Generic;
 using CommandLine;
 
-namespace KubeDeploy
+namespace KubeDeploy.Options
 {
-    [Verb("create", HelpText = "Create new deployment files.")]
-    public class CreateOptions : ICreateOptions
+    [Verb("init", HelpText = "Run setup files (configmap and namespace) for project")]
+    public class InitOptions : IBaseOptions
     {
         public string FileName { get; set; }
         public IEnumerable<string> Projects { get; set; }
         public string KubeDirName { get; set; }
-        public string DeployType { get; set; }
-        public string Dns { get; set; }
+
     }
 }
