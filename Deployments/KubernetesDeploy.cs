@@ -96,8 +96,8 @@ namespace KubernetesExtension
         public void CheckDeploymentStatus()
         {
             var appName = MakeDeploymentName(Name);
-            var projectDir = Path.GetDirectoryName(ProjectDir);
-            var yamlDir = $"{projectDir}\\{KubeDir}";
+            //var projectDir = Path.GetDirectoryName(ProjectDir);
+            var yamlDir = $"{ProjectDir}\\{KubeDir}";
             var knamespace = GetNameSpaceFromYaml(ProjectDir, KubeDir);
             var kubeCommand = $"rollout status deploy/{appName} --namespace {knamespace}";
 
