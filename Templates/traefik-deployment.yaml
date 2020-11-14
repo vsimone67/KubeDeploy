@@ -62,16 +62,6 @@ spec:
   entryPoints:
     - web
   routes:
-    # - match: Host(`DNSHERE`) && PathPrefix(`/PATHPREFIXHERE`)
-    #   kind: Rule
-    #   services:
-    #     - name: NAMEGOESHERE-svc
-    #       port: 80
-    # - match: Host(`DNSHERE`)
-    #   kind: Rule
-    #   services:
-    #     - name: NAMEGOESHERE-svc
-    #       port: 80
     - match: Host(`DNSHERE`) && PathPrefix(`/SERVICENAME/{catchall}`)
       kind: Rule
       services:
