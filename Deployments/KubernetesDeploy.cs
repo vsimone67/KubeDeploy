@@ -34,6 +34,7 @@ namespace KubernetesExtension
             string configYaml = GetSettingsForScript();
             string deployScript = GetSettingsForKubeDeployScript();
             string dockerFile = GetDockerFile();
+            string middlewareYaml = GetMiddleWare();
 
             deployYaml = deployYaml.Replace("NAMEGOESHERE", MakeDeploymentName(Name));
             deployYaml = deployYaml.Replace("NAMESPACEGOESHERE", NameSpace);
@@ -49,11 +50,13 @@ namespace KubernetesExtension
 
             dockerFile = dockerFile.Replace("SERVICENAME", ProjectDir);
 
+            middlewareYaml = middlewareYaml.Replace("NAMESPACEGOESHERE", NameSpace);
+
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\deployment.yaml", deployYaml);
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\createconfigs.ps1", configYaml);
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\deploy.ps1", GetPowerShellDeployScript());
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\createnamespace.ps1", GetNamespaceScript());
-            File.WriteAllText($"{ProjectDir}\\{KubeDir}\\middleware.yaml", GetMiddleWare());
+            File.WriteAllText($"{ProjectDir}\\{KubeDir}\\middleware.yaml", middlewareYaml);
             File.WriteAllText($"{ProjectDir}\\Dockerfile", dockerFile);
 
         }
