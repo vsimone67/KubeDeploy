@@ -35,13 +35,19 @@ namespace KubernetesExtension
             string deployScript = GetSettingsForKubeDeployScript();
             string dockerFile = GetDockerFile();
             string middlewareYaml = GetMiddleWare();
+            string serviceName = string.Empty;
+
+            if (Name.ToUpper().Contains("SERVICE"))
+                serviceName = Name.Replace("service", "");
+            else if (Name.ToUpper().Contains("PROCESSOR"))
+                serviceName = Name.Replace("processor", "");
 
             deployYaml = deployYaml.Replace("NAMEGOESHERE", MakeDeploymentName(Name));
             deployYaml = deployYaml.Replace("NAMESPACEGOESHERE", NameSpace);
             deployYaml = deployYaml.Replace("DNSHERE", Dns);
             deployYaml = deployYaml.Replace("ACTUATOR", Name);
-            deployYaml = deployYaml.Replace("SERVICENAME", Name.Replace("service", ""));
-            deployYaml = deployYaml.Replace("SERVICENAME", Name.Replace("processor", ""));
+
+            deployYaml = deployYaml.Replace("SERVICENAME", serviceName);
 
             configYaml = configYaml.Replace("NAMEGOESHERE", MakeDeploymentName(Name));
             configYaml = configYaml.Replace("NAMESPACEGOESHERE", NameSpace);
