@@ -41,6 +41,7 @@ namespace KubernetesExtension
             deployYaml = deployYaml.Replace("DNSHERE", Dns);
             deployYaml = deployYaml.Replace("ACTUATOR", Name);
             deployYaml = deployYaml.Replace("SERVICENAME", Name.Replace("service", ""));
+            deployYaml = deployYaml.Replace("SERVICENAME", Name.Replace("processor", ""));
 
             configYaml = configYaml.Replace("NAMEGOESHERE", MakeDeploymentName(Name));
             configYaml = configYaml.Replace("NAMESPACEGOESHERE", NameSpace);
