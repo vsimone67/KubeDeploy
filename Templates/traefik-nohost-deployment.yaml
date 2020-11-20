@@ -20,6 +20,26 @@ spec:
           ports:
             - name: http
               containerPort: 80
+          env:
+            - name: 'appdirectory'
+              value: '/app/settings/'
+          volumeMounts:
+            - name: configs
+              mountPath: '/app/settings'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 360
+      volumes:
+        - name: configs
+          projected:
+            sources:
+              - configMap:
+                  name: appsettings-NAMEGOESHERE
+              - secret:
+                  name: appsettings-secret-NAMEGOESHERE
 ---
 apiVersion: v1
 kind: Service
@@ -42,19 +62,19 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`DNSHERE`) && PathPrefix(`/SERVICENAME/{catchall}`)
+    - match: PathPrefix(`/SERVICENAME/{catchall}`)
       kind: Rule
       services:
         - name: NAMEGOESHERE-svc
           port: 80
-    - match: Host(`DNSHERE`) && PathPrefix(`/ACTUATOR/health`)
+    - match: PathPrefix(`/ACTUATOR/health`)
       kind: Rule
       services:
         - name: NAMEGOESHERE-svc
           port: 80
       middlewares:
         - name: st-healthcheck
-    - match: Host(`DNSHERE`) && PathPrefix(`/ACTUATOR/metrics`)
+    - match: PathPrefix(`/ACTUATOR/metrics`)
       kind: Rule
       services:
         - name: NAMEGOESHERE-svc
