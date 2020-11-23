@@ -165,15 +165,16 @@ namespace KubernetesExtension
 
         protected void UpdateDeployment()
         {
+            //https://stackoverflow.com/questions/40366192/kubernetes-how-to-make-deployment-to-update-image
             if (!KubeDirExists())
                 throw new Exception("Kubernetes files do not exist, please run create");
 
             var appName = MakeDeploymentName(Name);
             var yamlDir = $"{ProjectDir}\\{KubeDir}";
             var knamespace = GetNameSpaceFromYaml(ProjectDir, KubeDir);
-            var kubeCommand = $"set image deployment/{appName} {appName}-pod={DockerHubAccount}/{appName} --namespace {knamespace} --record";
+            //var kubeCommand = $"set image deployment/{appName} {appName}-pod={DockerHubAccount}/{appName}:latest --namespace {knamespace} --record";
+            var kubeCommand = $"rollout restart deployment {appName}";
 
-            Console.WriteLine($"The kube command is {kubeCommand}");
             Utils.RunProcess("kubectl.exe", kubeCommand, yamlDir, true, Process_OutputDataReceived, Process_ErrorDataReceived);
         }
 
