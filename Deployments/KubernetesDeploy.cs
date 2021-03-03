@@ -87,7 +87,8 @@ namespace KubernetesExtension
             var appName = MakeDeploymentName(Name);
             var deployments = kubeConnection.GetAllDeployments();
 
-            retval = deployments.Items.Any(exp => exp.Metadata.Name.ToUpper() == appName.ToUpper());
+            retval = deployments.Items.Any(exp => exp.Metadata.Name.ToUpper() == appName.ToUpper() && exp.Metadata.Namespace == NameSpace);
+
             return retval;
         }
         public bool KubeDirExists()

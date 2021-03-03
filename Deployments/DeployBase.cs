@@ -68,7 +68,6 @@ namespace KubernetesExtension
 
         protected async void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-
             if (e.Data != null)
             {
                 await Console.Out.WriteLineAsync(e.Data);
@@ -79,6 +78,7 @@ namespace KubernetesExtension
         {
             var psCommand = $"./deploy.ps1 -appName {appName} -projectDir ..";
             var psDir = $"{projectDir}\\{deployDir}";
+
             Utils.RunProcess("powershell.exe", psCommand, psDir, true, Process_OutputDataReceived, Process_ErrorDataReceived, Process_DockerBuildComplete);
         }
 
@@ -86,6 +86,7 @@ namespace KubernetesExtension
         {
             var psCommand = $"./deploy.ps1 -appName {appName} -projectDir ..";
             var psDir = $"{projectDir}\\{deployDir}";
+
             Utils.RunProcess("powershell.exe", psCommand, psDir, true, Process_OutputDataReceived, Process_ErrorDataReceived);
         }
 
