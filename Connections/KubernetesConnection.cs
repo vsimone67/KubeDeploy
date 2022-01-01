@@ -1,7 +1,5 @@
 ﻿using KubeClient.Models;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
 using YamlDotNet.RepresentationModel;
 
 namespace Kubernetes
@@ -37,7 +35,7 @@ namespace Kubernetes
         public DeploymentListV1 GetAllDeployments()
         {
             return GetKuberntesApi<DeploymentListV1>($"get deployment --all-namespaces -o=json");
-            
+
         }
 
         public DeploymentV1 GetDeploymentInfo(string deployment, string @nameSpace)

@@ -10,8 +10,8 @@ namespace KubernetesExtension
 
         void RemoveDeploymentFiles();
 
-        void BuildAndDeployToCluster();
         void DeployToCluster();
+        void PushToCluster();
         void Build();
 
         void DeleteDeployment();
@@ -19,15 +19,21 @@ namespace KubernetesExtension
 
         void ScaleDeployment(int numberOfReplicas);
 
+        void InitDeployment();
+
         DeploymentV1 GetDeploymentInfo();
 
-        public string Name { get; set; }
-        public string NameSpace { get; set; }
-        public string ProjectDir { get; set; }
-        public string KubeDir { get; set; }
-        public int Replicas { get; set; }
+        string Name { get; set; }
+        string NameSpace { get; set; }
+        string ProjectDir { get; set; }
+        string KubeDir { get; set; }
+        int Replicas { get; set; }
+        string DeployType { get; set; }
+        string DockerHubAccount { get; set; }
+        int Port { get; set; }
+        string Dns { get; set; }
 
-        public string DeployType { get; set; }
+
 
     }
 }

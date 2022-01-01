@@ -1,5 +1,4 @@
 using System.Runtime.Serialization;
-using YamlDotNet.Core.Tokens;
 
 namespace KubeClient.Models
 {

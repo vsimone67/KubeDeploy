@@ -1,7 +1,6 @@
-using System;
+using Newtonsoft.Json;
 using System.Collections.Concurrent;
 using System.Reflection;
-using Newtonsoft.Json;
 using YamlDotNet.Serialization;
 
 namespace KubeClient.Models

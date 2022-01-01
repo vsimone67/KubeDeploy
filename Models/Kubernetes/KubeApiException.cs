@@ -1,5 +1,3 @@
-using System;
-
 namespace KubeClient
 {
     using Models;

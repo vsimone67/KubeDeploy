@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace KubeClient.Models
+﻿namespace KubeClient.Models
 {
     /// <summary>
     ///     Well-known actions supported by Kubernetes resource APIs.

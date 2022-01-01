@@ -2,15 +2,12 @@ using CommandLine;
 
 namespace KubeDeploy
 {
-    [Verb("deploy", HelpText = "Deploy to cluster")]
-
-    public class DeployOptions : IOptions
+    [Verb("deploy", HelpText = "Build and deploy to cluster")]
+    public class DeployOptions : IBaseOptions
     {
-        public string Name { get; set; }
-        public string NameSpace { get; set; }
-        public string ProjectDir { get; set; }
+        public string FileName { get; set; }
+        public IEnumerable<string> Projects { get; set; }
         public string KubeDirName { get; set; }
-        public string DeployType { get; set; }
-        public int Replicas { get; set; }
+
     }
 }

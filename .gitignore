@@ -343,3 +343,4 @@ healthchecksdb
 ConfigFiles/**
 appsettings.secrets.json
 appsettings.json
+nupkg/

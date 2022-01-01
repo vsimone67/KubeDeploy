@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace KubernetesExtension
+﻿namespace KubernetesExtension
 {
     public class GetValueFromFile
     {

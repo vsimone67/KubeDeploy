@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-
 namespace KubeClient.Models
 {
     /// <summary>

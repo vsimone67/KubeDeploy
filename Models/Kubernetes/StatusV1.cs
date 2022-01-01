@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using YamlDotNet.Serialization;
 
@@ -56,7 +54,7 @@ namespace KubeClient.Models
         {
             if (String.IsNullOrWhiteSpace(message))
                 throw new ArgumentException("Argument cannot be null, empty, or entirely composed of whitespace: 'message'.", nameof(message));
-            
+
             return new StatusV1
             {
                 Status = SuccessStatus,
@@ -83,7 +81,7 @@ namespace KubeClient.Models
         {
             if (String.IsNullOrWhiteSpace(message))
                 throw new ArgumentException("Argument cannot be null, empty, or entirely composed of whitespace: 'message'.", nameof(message));
-            
+
             return new StatusV1
             {
                 Status = FailureStatus,

@@ -3,13 +3,11 @@ using CommandLine;
 namespace KubeDeploy
 {
     [Verb("scale", HelpText = "Scale a deployment with n replicas")]
-    public class ScaleOptions : IOptions
+    public class ScaleOptions : IScaleOptions
     {
-        public string Name { get; set; }
-        public string NameSpace { get; set; }
-        public string ProjectDir { get; set; }
+        public string FileName { get; set; }
+        public IEnumerable<string> Projects { get; set; }
         public string KubeDirName { get; set; }
-        public string DeployType { get; set; }
         public int Replicas { get; set; }
     }
 }

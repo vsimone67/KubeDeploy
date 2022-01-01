@@ -1,0 +1,17 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: st-healthcheck
+  namespace: NAMESPACEGOESHERE
+spec:
+  replacePath:
+    path: /actuator/health
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: st-metrics
+  namespace: NAMESPACEGOESHERE
+spec:
+  replacePath:
+    path: /actuator/metrics
