@@ -6,7 +6,7 @@ namespace KubeDeploy
     public interface ICreateOptions : IBaseOptions
     {
 
-        [Option('t', "type", Required = false, HelpText = "The deploy type you are createing (basic, full, traefik, traefik-basic)", Default = "traefik")]
+        [Option('t', "type", Required = false, HelpText = "The deploy type you are createing (basic, full, traefik, traefik-basic,traefik-nohost)", Default = "traefik-nohost")]
         public string DeployType { get; set; }
 
         [Option('d', "dns", Required = false, HelpText = "The DNS to use for all traefik routing", Default = "facpoc.titan")]

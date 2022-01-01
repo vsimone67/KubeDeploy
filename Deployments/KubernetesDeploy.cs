@@ -34,12 +34,20 @@ namespace KubernetesExtension
             string configYaml = GetSettingsForScript();
             string deployScript = GetSettingsForKubeDeployScript();
             string dockerFile = GetDockerFile();
+            string middlewareYaml = GetMiddleWare();
+            string serviceName = string.Empty;
+
+            if (Name.ToUpper().Contains("SERVICE"))
+                serviceName = Name.Replace("service", "");
+            else if (Name.ToUpper().Contains("PROCESSOR"))
+                serviceName = Name.Replace("processor", "");
 
             deployYaml = deployYaml.Replace("NAMEGOESHERE", MakeDeploymentName(Name));
             deployYaml = deployYaml.Replace("NAMESPACEGOESHERE", NameSpace);
             deployYaml = deployYaml.Replace("DNSHERE", Dns);
             deployYaml = deployYaml.Replace("ACTUATOR", Name);
-            deployYaml = deployYaml.Replace("SERVICENAME", Name.Replace("service", ""));
+
+            deployYaml = deployYaml.Replace("SERVICENAME", serviceName);
 
             configYaml = configYaml.Replace("NAMEGOESHERE", MakeDeploymentName(Name));
             configYaml = configYaml.Replace("NAMESPACEGOESHERE", NameSpace);
@@ -49,11 +57,13 @@ namespace KubernetesExtension
 
             dockerFile = dockerFile.Replace("SERVICENAME", ProjectDir);
 
+            middlewareYaml = middlewareYaml.Replace("NAMESPACEGOESHERE", NameSpace);
+
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\deployment.yaml", deployYaml);
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\createconfigs.ps1", configYaml);
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\deploy.ps1", GetPowerShellDeployScript());
             File.WriteAllText($"{ProjectDir}\\{KubeDir}\\createnamespace.ps1", GetNamespaceScript());
-            File.WriteAllText($"{ProjectDir}\\{KubeDir}\\middleware.yaml", GetMiddleWare());
+            File.WriteAllText($"{ProjectDir}\\{KubeDir}\\middleware.yaml", middlewareYaml);
             File.WriteAllText($"{ProjectDir}\\Dockerfile", dockerFile);
 
         }
@@ -77,7 +87,8 @@ namespace KubernetesExtension
             var appName = MakeDeploymentName(Name);
             var deployments = kubeConnection.GetAllDeployments();
 
-            retval = deployments.Items.Any(exp => exp.Metadata.Name.ToUpper() == appName.ToUpper());
+            retval = deployments.Items.Any(exp => exp.Metadata.Name.ToUpper() == appName.ToUpper() && exp.Metadata.Namespace == NameSpace);
+
             return retval;
         }
         public bool KubeDirExists()
@@ -96,8 +107,8 @@ namespace KubernetesExtension
         public void CheckDeploymentStatus()
         {
             var appName = MakeDeploymentName(Name);
-            var projectDir = Path.GetDirectoryName(ProjectDir);
-            var yamlDir = $"{projectDir}\\{KubeDir}";
+            //var projectDir = Path.GetDirectoryName(ProjectDir);
+            var yamlDir = $"{ProjectDir}\\{KubeDir}";
             var knamespace = GetNameSpaceFromYaml(ProjectDir, KubeDir);
             var kubeCommand = $"rollout status deploy/{appName} --namespace {knamespace}";
 
@@ -155,15 +166,16 @@ namespace KubernetesExtension
 
         protected void UpdateDeployment()
         {
+            //https://stackoverflow.com/questions/40366192/kubernetes-how-to-make-deployment-to-update-image
             if (!KubeDirExists())
                 throw new Exception("Kubernetes files do not exist, please run create");
 
             var appName = MakeDeploymentName(Name);
             var yamlDir = $"{ProjectDir}\\{KubeDir}";
             var knamespace = GetNameSpaceFromYaml(ProjectDir, KubeDir);
-            var kubeCommand = $"set image deployment/{appName} {appName}-pod={DockerHubAccount}/{appName} --namespace {knamespace} --record";
+            //var kubeCommand = $"set image deployment/{appName} {appName}-pod={DockerHubAccount}/{appName}:latest --namespace {knamespace} --record";
+            var kubeCommand = $"rollout restart deployment {appName}";
 
-            Console.WriteLine($"The kube command is {kubeCommand}");
             Utils.RunProcess("kubectl.exe", kubeCommand, yamlDir, true, Process_OutputDataReceived, Process_ErrorDataReceived);
         }
 

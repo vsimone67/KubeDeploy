@@ -16,13 +16,13 @@
         // "--name",
         // "traefiktest",
         // "--projdir",
-        // "D:\\VS2019\\PlayGround\\TraefikTest"
-        "create",
+        // "D:\\VS2019\\PlayGround\\daprpoc"
+        "push",
          "-i",
-         "apigateway",
+         "facservice",
          "authservice"
           "-f",
-          "D:\\VS2019\\PlayGround\\POC\\Tye.yaml"
+          "F:\\VS2019\\PlayGround\\daprpoc\\Tye.yaml"
         //  "deploy",
         //   "-f",
         //   "D:\\VS2019\\PlayGround\\POC\\Tye.yaml"
