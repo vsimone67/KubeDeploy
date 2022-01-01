@@ -1,18 +1,17 @@
 using Newtonsoft.Json;
 
-namespace KubeClient.Models
+namespace KubeClient.Models;
+
+/// <summary>
+///     ReplicaSetList is a collection of ReplicaSets.
+/// </summary>
+[KubeListItem("ReplicaSet", "apps/v1")]
+[KubeObject("ReplicaSetList", "apps/v1")]
+public partial class ReplicaSetListV1 : KubeResourceListV1<ReplicaSetV1>
 {
     /// <summary>
-    ///     ReplicaSetList is a collection of ReplicaSets.
+    ///     List of ReplicaSets. More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller
     /// </summary>
-    [KubeListItem("ReplicaSet", "apps/v1")]
-    [KubeObject("ReplicaSetList", "apps/v1")]
-    public partial class ReplicaSetListV1 : KubeResourceListV1<ReplicaSetV1>
-    {
-        /// <summary>
-        ///     List of ReplicaSets. More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller
-        /// </summary>
-        [JsonProperty("items", ObjectCreationHandling = ObjectCreationHandling.Reuse)]
-        public override List<ReplicaSetV1> Items { get; } = new List<ReplicaSetV1>();
-    }
+    [JsonProperty("items", ObjectCreationHandling = ObjectCreationHandling.Reuse)]
+    public override List<ReplicaSetV1> Items { get; } = new List<ReplicaSetV1>();
 }

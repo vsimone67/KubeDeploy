@@ -1,18 +1,17 @@
 using Newtonsoft.Json;
 using YamlDotNet.Serialization;
 
-namespace KubeClient.Models
+namespace KubeClient.Models;
+
+/// <summary>
+///     NodeConfigSource specifies a source of node configuration. Exactly one subfield (excluding metadata) must be non-nil.
+/// </summary>
+public partial class NodeConfigSourceV1
 {
     /// <summary>
-    ///     NodeConfigSource specifies a source of node configuration. Exactly one subfield (excluding metadata) must be non-nil.
+    ///     ConfigMap is a reference to a Node's ConfigMap
     /// </summary>
-    public partial class NodeConfigSourceV1
-    {
-        /// <summary>
-        ///     ConfigMap is a reference to a Node's ConfigMap
-        /// </summary>
-        [YamlMember(Alias = "configMap")]
-        [JsonProperty("configMap", NullValueHandling = NullValueHandling.Ignore)]
-        public ConfigMapNodeConfigSourceV1 ConfigMap { get; set; }
-    }
+    [YamlMember(Alias = "configMap")]
+    [JsonProperty("configMap", NullValueHandling = NullValueHandling.Ignore)]
+    public ConfigMapNodeConfigSourceV1 ConfigMap { get; set; }
 }

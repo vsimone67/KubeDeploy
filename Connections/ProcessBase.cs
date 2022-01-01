@@ -1,25 +1,24 @@
 ﻿using KubernetesExtension;
 using System.Diagnostics;
 
-namespace Kubernetes
+namespace Kubernetes;
+
+public class ProcessBase
 {
-    public class ProcessBase
+    protected string json;
+
+    public void RunCommand(string process, string command)
     {
-        protected string json;
+        json = string.Empty;
 
-        public void RunCommand(string process, string command)
+        Utils.RunProcess(process, command, "", true, GetJsonInfo);
+    }
+
+    protected void GetJsonInfo(object sender, DataReceivedEventArgs e)
+    {
+        if (e.Data != null)
         {
-            json = string.Empty;
-
-            Utils.RunProcess(process, command, "", true, GetJsonInfo);
-        }
-
-        protected void GetJsonInfo(object sender, DataReceivedEventArgs e)
-        {
-            if (e.Data != null)
-            {
-                json += e.Data;
-            }
+            json += e.Data;
         }
     }
 }

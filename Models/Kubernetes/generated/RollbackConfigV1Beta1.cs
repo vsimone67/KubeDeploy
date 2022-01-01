@@ -1,18 +1,17 @@
 using Newtonsoft.Json;
 using YamlDotNet.Serialization;
 
-namespace KubeClient.Models
+namespace KubeClient.Models;
+
+/// <summary>
+///     DEPRECATED.
+/// </summary>
+public partial class RollbackConfigV1Beta1
 {
     /// <summary>
-    ///     DEPRECATED.
+    ///     The revision to rollback to. If set to 0, rollback to the last revision.
     /// </summary>
-    public partial class RollbackConfigV1Beta1
-    {
-        /// <summary>
-        ///     The revision to rollback to. If set to 0, rollback to the last revision.
-        /// </summary>
-        [YamlMember(Alias = "revision")]
-        [JsonProperty("revision", NullValueHandling = NullValueHandling.Ignore)]
-        public int? Revision { get; set; }
-    }
+    [YamlMember(Alias = "revision")]
+    [JsonProperty("revision", NullValueHandling = NullValueHandling.Ignore)]
+    public int? Revision { get; set; }
 }

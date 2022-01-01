@@ -1,18 +1,17 @@
 using Newtonsoft.Json;
 using YamlDotNet.Serialization;
 
-namespace KubeClient.Models
+namespace KubeClient.Models;
+
+/// <summary>
+///     APIGroupList is a list of APIGroup, to allow clients to discover the API at /apis.
+/// </summary>
+public partial class APIGroupListV1 : KubeObjectV1
 {
     /// <summary>
-    ///     APIGroupList is a list of APIGroup, to allow clients to discover the API at /apis.
+    ///     groups is a list of APIGroup.
     /// </summary>
-    public partial class APIGroupListV1 : KubeObjectV1
-    {
-        /// <summary>
-        ///     groups is a list of APIGroup.
-        /// </summary>
-        [YamlMember(Alias = "groups")]
-        [JsonProperty("groups", ObjectCreationHandling = ObjectCreationHandling.Reuse)]
-        public List<APIGroupV1> Groups { get; } = new List<APIGroupV1>();
-    }
+    [YamlMember(Alias = "groups")]
+    [JsonProperty("groups", ObjectCreationHandling = ObjectCreationHandling.Reuse)]
+    public List<APIGroupV1> Groups { get; } = new List<APIGroupV1>();
 }

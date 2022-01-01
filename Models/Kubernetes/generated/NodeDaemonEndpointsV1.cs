@@ -1,18 +1,17 @@
 using Newtonsoft.Json;
 using YamlDotNet.Serialization;
 
-namespace KubeClient.Models
+namespace KubeClient.Models;
+
+/// <summary>
+///     NodeDaemonEndpoints lists ports opened by daemons running on the Node.
+/// </summary>
+public partial class NodeDaemonEndpointsV1
 {
     /// <summary>
-    ///     NodeDaemonEndpoints lists ports opened by daemons running on the Node.
+    ///     Endpoint on which Kubelet is listening.
     /// </summary>
-    public partial class NodeDaemonEndpointsV1
-    {
-        /// <summary>
-        ///     Endpoint on which Kubelet is listening.
-        /// </summary>
-        [YamlMember(Alias = "kubeletEndpoint")]
-        [JsonProperty("kubeletEndpoint", NullValueHandling = NullValueHandling.Ignore)]
-        public DaemonEndpointV1 KubeletEndpoint { get; set; }
-    }
+    [YamlMember(Alias = "kubeletEndpoint")]
+    [JsonProperty("kubeletEndpoint", NullValueHandling = NullValueHandling.Ignore)]
+    public DaemonEndpointV1 KubeletEndpoint { get; set; }
 }

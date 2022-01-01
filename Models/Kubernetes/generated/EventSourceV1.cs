@@ -1,25 +1,24 @@
 using Newtonsoft.Json;
 using YamlDotNet.Serialization;
 
-namespace KubeClient.Models
+namespace KubeClient.Models;
+
+/// <summary>
+///     EventSource contains information for an event.
+/// </summary>
+public partial class EventSourceV1
 {
     /// <summary>
-    ///     EventSource contains information for an event.
+    ///     Component from which the event is generated.
     /// </summary>
-    public partial class EventSourceV1
-    {
-        /// <summary>
-        ///     Component from which the event is generated.
-        /// </summary>
-        [YamlMember(Alias = "component")]
-        [JsonProperty("component", NullValueHandling = NullValueHandling.Ignore)]
-        public string Component { get; set; }
+    [YamlMember(Alias = "component")]
+    [JsonProperty("component", NullValueHandling = NullValueHandling.Ignore)]
+    public string Component { get; set; }
 
-        /// <summary>
-        ///     Node name on which the event is generated.
-        /// </summary>
-        [YamlMember(Alias = "host")]
-        [JsonProperty("host", NullValueHandling = NullValueHandling.Ignore)]
-        public string Host { get; set; }
-    }
+    /// <summary>
+    ///     Node name on which the event is generated.
+    /// </summary>
+    [YamlMember(Alias = "host")]
+    [JsonProperty("host", NullValueHandling = NullValueHandling.Ignore)]
+    public string Host { get; set; }
 }

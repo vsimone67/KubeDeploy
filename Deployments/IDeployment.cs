@@ -1,39 +1,38 @@
 ﻿using KubeClient.Models;
 
-namespace KubernetesExtension
+namespace KubernetesExtension;
+
+public interface IDeployment
 {
-    public interface IDeployment
-    {
-        bool HasDeploymnet();
+    bool HasDeploymnet();
 
-        void CreateDeploymentFiles();
+    void CreateDeploymentFiles();
 
-        void RemoveDeploymentFiles();
+    void RemoveDeploymentFiles();
 
-        void DeployToCluster();
-        void PushToCluster();
-        void Build();
+    void DeployToCluster();
+    void PushToCluster();
+    void Build();
 
-        void DeleteDeployment();
-        void CheckDeploymentStatus();
+    void DeleteDeployment();
+    void CheckDeploymentStatus();
 
-        void ScaleDeployment(int numberOfReplicas);
+    void ScaleDeployment(int numberOfReplicas);
 
-        void InitDeployment();
+    void InitDeployment();
 
-        DeploymentV1 GetDeploymentInfo();
+    DeploymentV1 GetDeploymentInfo();
 
-        string Name { get; set; }
-        string NameSpace { get; set; }
-        string ProjectDir { get; set; }
-        string KubeDir { get; set; }
-        int Replicas { get; set; }
-        string DeployType { get; set; }
-        string DockerHubAccount { get; set; }
-        int Port { get; set; }
-        string Dns { get; set; }
+    string Name { get; set; }
+    string NameSpace { get; set; }
+    string ProjectDir { get; set; }
+    string KubeDir { get; set; }
+    int Replicas { get; set; }
+    string DeployType { get; set; }
+    string DockerHubAccount { get; set; }
+    int Port { get; set; }
+    string Dns { get; set; }
 
 
 
-    }
 }

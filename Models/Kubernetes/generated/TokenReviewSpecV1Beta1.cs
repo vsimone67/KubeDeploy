@@ -1,18 +1,17 @@
 using Newtonsoft.Json;
 using YamlDotNet.Serialization;
 
-namespace KubeClient.Models
+namespace KubeClient.Models;
+
+/// <summary>
+///     TokenReviewSpec is a description of the token authentication request.
+/// </summary>
+public partial class TokenReviewSpecV1Beta1
 {
     /// <summary>
-    ///     TokenReviewSpec is a description of the token authentication request.
+    ///     Token is the opaque bearer token.
     /// </summary>
-    public partial class TokenReviewSpecV1Beta1
-    {
-        /// <summary>
-        ///     Token is the opaque bearer token.
-        /// </summary>
-        [YamlMember(Alias = "token")]
-        [JsonProperty("token", NullValueHandling = NullValueHandling.Ignore)]
-        public string Token { get; set; }
-    }
+    [YamlMember(Alias = "token")]
+    [JsonProperty("token", NullValueHandling = NullValueHandling.Ignore)]
+    public string Token { get; set; }
 }

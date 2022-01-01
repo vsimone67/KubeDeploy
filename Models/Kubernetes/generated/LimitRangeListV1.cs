@@ -1,18 +1,17 @@
 using Newtonsoft.Json;
 
-namespace KubeClient.Models
+namespace KubeClient.Models;
+
+/// <summary>
+///     LimitRangeList is a list of LimitRange items.
+/// </summary>
+[KubeListItem("LimitRange", "v1")]
+[KubeObject("LimitRangeList", "v1")]
+public partial class LimitRangeListV1 : KubeResourceListV1<LimitRangeV1>
 {
     /// <summary>
-    ///     LimitRangeList is a list of LimitRange items.
+    ///     Items is a list of LimitRange objects. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     /// </summary>
-    [KubeListItem("LimitRange", "v1")]
-    [KubeObject("LimitRangeList", "v1")]
-    public partial class LimitRangeListV1 : KubeResourceListV1<LimitRangeV1>
-    {
-        /// <summary>
-        ///     Items is a list of LimitRange objects. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-        /// </summary>
-        [JsonProperty("items", ObjectCreationHandling = ObjectCreationHandling.Reuse)]
-        public override List<LimitRangeV1> Items { get; } = new List<LimitRangeV1>();
-    }
+    [JsonProperty("items", ObjectCreationHandling = ObjectCreationHandling.Reuse)]
+    public override List<LimitRangeV1> Items { get; } = new List<LimitRangeV1>();
 }

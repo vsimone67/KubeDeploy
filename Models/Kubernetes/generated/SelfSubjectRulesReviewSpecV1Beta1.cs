@@ -1,18 +1,17 @@
 using Newtonsoft.Json;
 using YamlDotNet.Serialization;
 
-namespace KubeClient.Models
+namespace KubeClient.Models;
+
+/// <summary>
+///     No description provided.
+/// </summary>
+public partial class SelfSubjectRulesReviewSpecV1Beta1
 {
     /// <summary>
-    ///     No description provided.
+    ///     Namespace to evaluate rules for. Required.
     /// </summary>
-    public partial class SelfSubjectRulesReviewSpecV1Beta1
-    {
-        /// <summary>
-        ///     Namespace to evaluate rules for. Required.
-        /// </summary>
-        [YamlMember(Alias = "namespace")]
-        [JsonProperty("namespace", NullValueHandling = NullValueHandling.Ignore)]
-        public string Namespace { get; set; }
-    }
+    [YamlMember(Alias = "namespace")]
+    [JsonProperty("namespace", NullValueHandling = NullValueHandling.Ignore)]
+    public string Namespace { get; set; }
 }

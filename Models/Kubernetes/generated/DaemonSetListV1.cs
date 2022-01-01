@@ -1,18 +1,17 @@
 using Newtonsoft.Json;
 
-namespace KubeClient.Models
+namespace KubeClient.Models;
+
+/// <summary>
+///     DaemonSetList is a collection of daemon sets.
+/// </summary>
+[KubeListItem("DaemonSet", "apps/v1")]
+[KubeObject("DaemonSetList", "apps/v1")]
+public partial class DaemonSetListV1 : KubeResourceListV1<DaemonSetV1>
 {
     /// <summary>
-    ///     DaemonSetList is a collection of daemon sets.
+    ///     A list of daemon sets.
     /// </summary>
-    [KubeListItem("DaemonSet", "apps/v1")]
-    [KubeObject("DaemonSetList", "apps/v1")]
-    public partial class DaemonSetListV1 : KubeResourceListV1<DaemonSetV1>
-    {
-        /// <summary>
-        ///     A list of daemon sets.
-        /// </summary>
-        [JsonProperty("items", ObjectCreationHandling = ObjectCreationHandling.Reuse)]
-        public override List<DaemonSetV1> Items { get; } = new List<DaemonSetV1>();
-    }
+    [JsonProperty("items", ObjectCreationHandling = ObjectCreationHandling.Reuse)]
+    public override List<DaemonSetV1> Items { get; } = new List<DaemonSetV1>();
 }

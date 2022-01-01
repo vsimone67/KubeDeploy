@@ -1,18 +1,17 @@
 using Newtonsoft.Json;
 using YamlDotNet.Serialization;
 
-namespace KubeClient.Models
+namespace KubeClient.Models;
+
+/// <summary>
+///     DaemonEndpoint contains information about a single Daemon endpoint.
+/// </summary>
+public partial class DaemonEndpointV1
 {
     /// <summary>
-    ///     DaemonEndpoint contains information about a single Daemon endpoint.
+    ///     Port number of the given endpoint.
     /// </summary>
-    public partial class DaemonEndpointV1
-    {
-        /// <summary>
-        ///     Port number of the given endpoint.
-        /// </summary>
-        [YamlMember(Alias = "Port")]
-        [JsonProperty("Port", NullValueHandling = NullValueHandling.Include)]
-        public int Port { get; set; }
-    }
+    [YamlMember(Alias = "Port")]
+    [JsonProperty("Port", NullValueHandling = NullValueHandling.Include)]
+    public int Port { get; set; }
 }
